@@ -12,7 +12,10 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "axios": "^0.27.2",
+    "babel-plugin-root-import": "^6.6.0",
     "next": "12.2.4",
+    "query-string": "^7.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
