@@ -6,6 +6,7 @@ export default function Home() {
           Welcome to <span className="text-purple-700">Nextjs</span>,{' '}
           <span className="text-indigo-700">TailwindCSS</span> and{' '}
           <span className="text-gray-700">TypeScript</span>
+          <span className="text-red">first cmt</span>
         </h1>
       </main>
     </div>
