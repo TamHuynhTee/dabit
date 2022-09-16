@@ -1,14 +1,9 @@
+import LayoutHome from '~/layouts/LayoutHome';
+
 export default function Home() {
   return (
-    <div className="container flex items-center p-4 mx-auto min-h-screen justify-center">
-      <main>
-        <h1 className="font-mono text-xl code">
-          Welcome to <span className="text-purple-700">Nextjs</span>,{' '}
-          <span className="text-indigo-700">TailwindCSS</span> and{' '}
-          <span className="text-gray-700">TypeScript</span>
-          <span className="text-red-800">first cmt</span>
-        </h1>
-      </main>
-    </div>
+    <LayoutHome>
+      <p>Sơn Tùng M-TP - Chắc Ai Đó Sẽ Về</p>
+    </LayoutHome>
   );
 }
