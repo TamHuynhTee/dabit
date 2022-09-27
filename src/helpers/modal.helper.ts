@@ -1,14 +1,16 @@
-export const openModal = (modalName: string) => {
+import { DRAWER_KEYS, MODAL_KEYS } from '~/constants/modal.constants';
+
+export const openModalOrDrawer = (popUpKey: DRAWER_KEYS | MODAL_KEYS) => {
   try {
-    document.querySelector(`#${modalName}`).classList.add('show');
+    document.querySelector(`#${popUpKey}`).classList.add('show');
   } catch (error) {
     console.error(error.message);
   }
 };
 
-export const closeModal = (modalName: string) => {
+export const closeModalOrDrawer = (popUpKey: DRAWER_KEYS | MODAL_KEYS) => {
   try {
-    document.querySelector(`#${modalName}`).classList.remove('show');
+    document.querySelector(`#${popUpKey}`).classList.remove('show');
   } catch (error) {
     console.error(error.message);
   }

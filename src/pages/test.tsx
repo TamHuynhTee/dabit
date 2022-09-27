@@ -1,12 +1,16 @@
 import React from 'react';
+import DrawerContainer from '~/components/common/drawerContainer';
 import ModalContainer from '~/components/common/modalContainer';
-import { openModal } from '~/helpers/modal.helper';
+import { openModalOrDrawer } from '~/helpers/modal.helper';
 
 const Test = () => {
   return (
     <div>
-      <button onClick={() => openModal('test_modal')}>Open</button>
-      <ModalContainer modalName="test_modal">agwqaga</ModalContainer>
+      <button onClick={() => openModalOrDrawer('test_modal')}>Open</button>
+      <DrawerContainer drawerKey="test_modal" position="right">
+        agwqaga
+      </DrawerContainer>
+      {/* <ModalContainer modalName="test_modal">agwqaga</ModalContainer> */}
     </div>
   );
 };

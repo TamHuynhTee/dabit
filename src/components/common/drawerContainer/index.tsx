@@ -1,44 +1,44 @@
 import { IconX } from '@tabler/icons';
 import React from 'react';
-import { MODAL_KEYS } from '~/constants/modal.constants';
+import { DRAWER_KEYS } from '~/constants/modal.constants';
 import Flex from '../flex';
 
 type IModalProps = {
-  modalKey: MODAL_KEYS;
-  animation?: 'slideTopDown' | 'scale' | 'fade';
+  drawerKey: DRAWER_KEYS;
+  position?: 'right' | 'left';
   className?: string;
   children: React.ReactNode;
   hideCloseIcon?: boolean;
 };
 
-const ModalContainer = ({
-  modalKey,
-  animation = 'slideTopDown',
+const DrawerContainer = ({
+  drawerKey,
+  position = 'right',
   children,
   className = '',
   hideCloseIcon = false,
 }: IModalProps) => {
-  const modalRef = React.useRef<HTMLDivElement>(null);
+  const drawerRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
-    const _overlay = document.querySelector('.modal_overlay');
+    const _overlay = document.querySelector('.drawer_overlay');
     _overlay.addEventListener('click', function (e) {
       if (e.target !== this) return;
       _overlay.classList.remove('show');
     });
     document
-      .querySelector('.modal_overlay_close')
+      .querySelector('.drawer_overlay_close')
       .addEventListener('click', function () {
         _overlay.classList.remove('show');
       });
   }, []);
 
   return (
-    <div id={modalKey} className={`modal_overlay`} ref={modalRef}>
-      <div className={`modal_box ${animation} ${className}`}>
+    <div id={drawerKey} className={`drawer_overlay`} ref={drawerRef}>
+      <div className={`drawer_box ${position} ${className}`}>
         {!hideCloseIcon && (
-          <Flex justifyContent="end">
+          <Flex className="drawer_header">
             <IconX
-              className="modal_overlay_close"
+              className="drawer_overlay_close"
               style={{ cursor: 'pointer' }}
             />
           </Flex>
@@ -49,4 +49,4 @@ const ModalContainer = ({
   );
 };
 
-export default ModalContainer;
+export default DrawerContainer;

@@ -14,7 +14,7 @@ const ModalLogin = () => {
         />
       </Flex>
       <div className="mt-[20px]">
-        <form className="flex flex-col gap-3 px-[20px]">
+        <form className="flex flex-col gap-3 px-[10px]">
           <Flex
             className="py-[5px] h-[40px] gap-3 border-b border-b-[#c3c3c3]"
             alignItem="center"
