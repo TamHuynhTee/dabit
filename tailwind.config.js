@@ -13,8 +13,10 @@ module.exports = {
       dark_1: '#111111',
       dark_2: '#222222',
       dark_3: '#333333',
+      error: '#ff3b3b',
       black: '#000000',
       white: '#ffffff',
+      red: '#ff0000',
       transparent: 'transparent',
     },
 

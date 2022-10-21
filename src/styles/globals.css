@@ -16,19 +16,23 @@ body {
 
 .container {
   max-width: 1500px;
-  /* padding: 0 20px; */
-  margin: 0 auto;
+  margin-right: auto;
+  margin-left: auto;
 }
 
-.mx-auto {
-  margin: 0 auto;
-}
 .my-auto {
-  margin: auto 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.mx-auto {
+  margin-right: auto;
+  margin-left: auto;
 }
 .px-auto {
-  padding: 0 auto;
+  padding-left: auto;
+  padding-right: auto;
 }
 .py-auto {
-  padding: auto 0;
+  padding-top: auto;
+  padding-bottom: auto;
 }

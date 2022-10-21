@@ -4,7 +4,7 @@ import { DateJS } from '~/helpers/date.helper';
 
 const Footer = () => {
   return (
-    <footer className="sticky bottom-0">
+    <footer className="">
       {/* main content footer */}
       <section className="bg-[#fffd7f]">
         <div className="container mx-auto">
@@ -114,7 +114,7 @@ const Footer = () => {
           <div className="py-[5px] px-[20px]">
             <Flex alignItem="center" justifyContent="center">
               <span className="text-white text-[14px]">
-                © {DateJS.getYear()} Nobida Electronic. All rights reserved.
+                © {DateJS.getYear()} Dabit Electronic. All rights reserved.
               </span>
             </Flex>
           </div>

@@ -172,7 +172,7 @@ const LayoutHome = (props: Props) => {
         <CategorySection />
       </header>
       {/* body */}
-      <main className="container mx-auto px-[20px]">{children}</main>
+      <main className="container mx-auto my-5 px-[20px]">{children}</main>
       {/* footer */}
       <Footer />
 

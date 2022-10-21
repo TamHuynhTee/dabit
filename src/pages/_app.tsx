@@ -10,7 +10,7 @@ export default function App(props: AppProps) {
   return (
     <React.Fragment>
       <Head>
-        <title>Nobida Electronic</title>
+        <title>Dabit Electronic</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
