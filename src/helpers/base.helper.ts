@@ -10,3 +10,5 @@ export const getFromLocalStorage = (key: string): any => {
   const parsedValue = JSON.parse(value);
   return parsedValue;
 };
+
+export const getLengthArray = (array: any[]): number => array.length;

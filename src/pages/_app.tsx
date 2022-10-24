@@ -3,6 +3,9 @@ import Head from 'next/head';
 import React from 'react';
 import '~/styles/globals.css';
 import '~/styles/modal.css';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import 'tailwindcss/tailwind.css';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;

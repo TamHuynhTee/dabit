@@ -1,6 +1,7 @@
 import { IconX } from '@tabler/icons';
 import React from 'react';
 import { MODAL_KEYS } from '~/constants/modal.constants';
+import { closeModalOrDrawer } from '~/helpers/modal.helper';
 import Flex from '../flex';
 
 type IModalProps = {
@@ -40,6 +41,7 @@ const ModalContainer = ({
             <IconX
               className="modal_overlay_close"
               style={{ cursor: 'pointer' }}
+              onClick={() => closeModalOrDrawer(modalKey)}
             />
           </Flex>
         )}

@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import React from 'react';
-// import { useInView } from '~/hooks/useInView';
 import {
-  IconHeart,
+  //   IconHeart,
   IconHistory,
   IconMailForward,
   IconPhone,
-  IconSearch,
   IconShoppingCart,
+  IconTruckDelivery,
   IconUserCircle,
 } from '@tabler/icons';
 import Flex from '~/components/common/flex';
@@ -22,6 +21,8 @@ import styles from './layout.module.css';
 import ContactLink from './components/ContactLink';
 import DrawerContainer from '~/components/common/drawerContainer';
 import DrawerCart from '~/components/drawers/cart';
+import HeaderSearch from './components/headerSearch';
+import ModalRegister from '~/components/modals/registerModal';
 
 type Props = {
   children: React.ReactNode;
@@ -75,28 +76,7 @@ const LayoutHome = (props: Props) => {
               </Flex>
               {/* Search */}
               <div className="col-span-7">
-                <div className="px-[10px] h-full">
-                  <Flex className="h-full" alignItem="center">
-                    <div
-                      className={`border border-[#e1e1e1] rounded-tl-[5px] rounded-bl-[5px] border-r-0 px-[10px] w-full h-full relative ${styles.search__input_nav}`}
-                    >
-                      <input
-                        type="text"
-                        className="w-full h-full border-none outline-none"
-                        placeholder="Bạn đang tìm kiếm gì thế?"
-                      />
-                      <div className={`${styles.focus__bar}`}></div>
-                    </div>
-                    <button
-                      type="submit"
-                      className="h-full px-[20px] bg-dark_3 rounded-tr-[5px] rounded-br-[5px]"
-                    >
-                      <span>
-                        <IconSearch size={16} strokeWidth={2} color={'white'} />
-                      </span>
-                    </button>
-                  </Flex>
-                </div>
+                <HeaderSearch />
               </div>
               {/* User */}
               <div className="col-span-2">
@@ -121,13 +101,12 @@ const LayoutHome = (props: Props) => {
                   justifyContent="center"
                   className="col-span-1"
                 >
-                  <Link href={'#!'}>
-                    <a>
-                      <IconHeart
+                  <Link href={'/kiem-tra-don-hang'}>
+                    <a title="Kiểm tra đơn hàng">
+                      <IconTruckDelivery
                         size={24}
                         strokeWidth={2}
-                        color={'black'}
-                        className={`${styles.favorite_icon}`}
+                        className={`${styles.checkOrder_icon}`}
                       />
                     </a>
                   </Link>
@@ -139,7 +118,7 @@ const LayoutHome = (props: Props) => {
                   className="col-span-1"
                 >
                   <Link href={'#!'}>
-                    <a>
+                    <a title="Lịch sử mua hàng">
                       <IconHistory
                         size={24}
                         strokeWidth={2}
@@ -178,6 +157,9 @@ const LayoutHome = (props: Props) => {
 
       <ModalContainer modalKey={MODAL_KEYS.MODAL_LOGIN} animation="fade">
         <ModalLogin />
+      </ModalContainer>
+      <ModalContainer modalKey={MODAL_KEYS.MODAL_REGISTER} animation="fade">
+        <ModalRegister />
       </ModalContainer>
       <DrawerContainer drawerKey={DRAWER_KEYS.DRAWER_CART}>
         <DrawerCart />
