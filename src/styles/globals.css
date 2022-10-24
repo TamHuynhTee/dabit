@@ -15,20 +15,67 @@ body {
 }
 
 .container {
-  max-width: 1500px;
-  /* padding: 0 20px; */
-  margin: 0 auto;
-}
-
-.mx-auto {
-  margin: 0 auto;
+  max-width: 1440px;
+  margin-right: auto;
+  margin-left: auto;
 }
 .my-auto {
-  margin: auto 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.mx-auto {
+  margin-right: auto;
+  margin-left: auto;
 }
 .px-auto {
-  padding: 0 auto;
+  padding-left: auto;
+  padding-right: auto;
 }
 .py-auto {
-  padding: auto 0;
+  padding-top: auto;
+  padding-bottom: auto;
 }
+
+/* MAX LINE */
+.max_line-1 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.max_line-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.max_line-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.max_line-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.max_line-5 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
+.max_line-6 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+}
+/* END MAX LINE */

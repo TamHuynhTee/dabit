@@ -6,7 +6,7 @@ import axios, {
 import queryString from 'query-string';
 import { BASE_CONSTANTS } from '~/constants/base.constants';
 import { LOCAL_STORAGE_KEY } from '~/constants/localStorage.constants';
-import { getFromLocalStorage } from '~/helpers/base.constants';
+import { getFromLocalStorage } from '~/helpers/base.helper';
 
 const axiosClient = axios.create({
   baseURL: BASE_CONSTANTS.BASE_URL,

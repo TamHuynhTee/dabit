@@ -13,24 +13,27 @@ module.exports = {
       dark_1: '#111111',
       dark_2: '#222222',
       dark_3: '#333333',
+      gray_D9: '#d9d9d9',
+      gray_F1: '#f1f1f1',
+      gray_C1: '#c1c1c1',
+      error: '#ff3b3b',
       black: '#000000',
       white: '#ffffff',
+      red: '#ff0000',
       transparent: 'transparent',
+      yellow_E3: '#e3a008',
+      blue_00: '#0091ff',
     },
 
     extend: {},
     screens: {
-      xs: { min: '375px', max: '639px' },
+      'max-1440px': { max: '1440px' },
+      'max-1280': { max: '1280px' },
+      'max-928': { max: '928px' },
+      'max-768': { max: '768px' },
+      'max-512': { max: '512px' },
 
-      sm: { min: '640px', max: '767px' },
-
-      md: { min: '768px', max: '1023px' },
-
-      lg: { min: '1024px', max: '1279px' },
-
-      xl: { min: '1280px', max: '1535px' },
-
-      '2xl': { min: '1536px' },
+      '2xl': { min: '1440px' },
     },
   },
   corePlugins: {

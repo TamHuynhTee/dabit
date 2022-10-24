@@ -1,9 +1,11 @@
 import { IconX } from '@tabler/icons';
 import React from 'react';
+import { MODAL_KEYS } from '~/constants/modal.constants';
+import { closeModalOrDrawer } from '~/helpers/modal.helper';
 import Flex from '../flex';
 
 type IModalProps = {
-  modalName: string;
+  modalKey: MODAL_KEYS;
   animation?: 'slideTopDown' | 'scale' | 'fade';
   className?: string;
   children: React.ReactNode;
@@ -11,7 +13,7 @@ type IModalProps = {
 };
 
 const ModalContainer = ({
-  modalName,
+  modalKey,
   animation = 'slideTopDown',
   children,
   className = '',
@@ -32,13 +34,14 @@ const ModalContainer = ({
   }, []);
 
   return (
-    <div id={modalName} className={`modal_overlay`} ref={modalRef}>
+    <div id={modalKey} className={`modal_overlay`} ref={modalRef}>
       <div className={`modal_box ${animation} ${className}`}>
         {!hideCloseIcon && (
           <Flex justifyContent="end">
             <IconX
               className="modal_overlay_close"
               style={{ cursor: 'pointer' }}
+              onClick={() => closeModalOrDrawer(modalKey)}
             />
           </Flex>
         )}
