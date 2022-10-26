@@ -51,7 +51,7 @@ const Breadcrumb = ({ path = [] }: Props) => {
                 <div className="flex items-center">
                   <BreadcrumbSeparator />
                   <Link href={e.slug}>
-                    <a className="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                    <a className="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 dark:hover:text-white">
                       {e.name}
                     </a>
                   </Link>
@@ -63,32 +63,13 @@ const Breadcrumb = ({ path = [] }: Props) => {
               <li key={i}>
                 <div className="flex items-center">
                   <BreadcrumbSeparator />
-                  <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
+                  <span className="ml-1 text-sm font-normal text-gray-500">
                     {e.name}
                   </span>
                 </div>
               </li>
             );
         })}
-        {/* <li>
-          <div className="flex items-center">
-            <BreadcrumbSeparator />
-            <a
-              href="#"
-              className="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white"
-            >
-              Templates
-            </a>
-          </div>
-        </li>
-        <li aria-current="page">
-          <div className="flex items-center">
-            <BreadcrumbSeparator />
-            <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
-              Flowbite
-            </span>
-          </div>
-        </li> */}
       </ol>
     </nav>
   );

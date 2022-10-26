@@ -1,4 +1,9 @@
-import { IconHeart, IconShoppingCartPlus } from '@tabler/icons';
+import {
+  IconHeart,
+  IconMinus,
+  IconPlus,
+  IconShoppingCartPlus,
+} from '@tabler/icons';
 import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
@@ -24,7 +29,7 @@ const colors = [
     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-51.jpg',
   },
   {
-    value: 'red',
+    value: 'yellow_E3',
     price: 28990000,
     title: 'Đỏ',
     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-54.jpg',
@@ -135,7 +140,7 @@ const ProductDetailPage = (props: Props) => {
         <div className="col-span-4">
           {/* Price */}
           <div className="flex items-center gap-2">
-            <p className="text-[22px] text-red font-bold">
+            <p className="text-[22px] text-yellow_E3 font-bold">
               {formatMoney(22000000)} VND
             </p>
             <p className="text-[16px] text-dark_3 font-semibold line-through">
@@ -155,7 +160,7 @@ const ProductDetailPage = (props: Props) => {
                     key={i}
                     className={`p-2 col-span-1 w-auto bg-white border ${
                       active
-                        ? 'border-red'
+                        ? 'border-yellow_E3'
                         : 'border-gray_D9 hover:border-black'
                     } cursor-pointer rounded-xl flex flex-col gap-1 items-center`}
                     onClick={() => setCurrentProperty(e.value)}
@@ -180,7 +185,7 @@ const ProductDetailPage = (props: Props) => {
                     key={i}
                     className={`p-2 col-span-1 w-auto bg-white border ${
                       active
-                        ? 'border-red'
+                        ? 'border-yellow_E3'
                         : 'border-gray_D9 hover:border-black'
                     } cursor-pointer rounded-xl grid grid-cols-4 gap-1`}
                     onClick={() => setCurrentColor(e.value)}
@@ -207,18 +212,25 @@ const ProductDetailPage = (props: Props) => {
               })}
             </div>
           </div>
+          {/* Quantity */}
+          <QuantityPicker productPrice={22000000} />
           {/* Buttons */}
           <div className="mt-4">
             <div className="grid grid-cols-6 gap-2 items-center bg-white">
-              <button className="col-span-3 border-2 border-red bg-red rounded-lg w-full p-[5px] flex flex-col items-center">
+              <button className="col-span-3 border-2 border-yellow_E3 bg-yellow_E3 rounded-lg w-full p-[5px] flex flex-col items-center">
                 <span className="font-bold text-base text-white">MUA NGAY</span>
                 <span className="font-semibold text-[13px] text-white">
                   (Giao hàng tận nơi)
                 </span>
               </button>
-              <button className="col-span-2 border-2 border-red rounded-lg w-full p-[5px] flex flex-col items-center">
-                <IconShoppingCartPlus size={24} strokeWidth={2} color={'red'} />
-                <span className="font-semibold text-[12px] text-red">
+              <button className="col-span-2 border-2 border-yellow_E3 rounded-lg w-full p-[5px] flex flex-col items-center">
+                <IconShoppingCartPlus
+                  size={24}
+                  strokeWidth={2}
+                  //   color={'yellow_E3'}
+                  className="text-yellow_E3"
+                />
+                <span className="font-semibold text-[12px] text-yellow_E3">
                   Thêm vào giỏ hàng
                 </span>
               </button>
@@ -394,82 +406,62 @@ const ProductDetailPage = (props: Props) => {
               4.95 out of 5
             </p>
           </div>
-          {/* <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            1,745 global ratings
-          </p>
-          <div className="flex items-center mt-4">
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              5 star
-            </span>
-            <div className="mx-4 w-2/4 h-5 bg-gray-200 rounded dark:bg-gray-700">
-              <div
-                className="h-5 bg-yellow-400 rounded"
-                style={{ width: '70%' }}
-              ></div>
-            </div>
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              70%
-            </span>
-          </div>
-          <div className="flex items-center mt-4">
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              4 star
-            </span>
-            <div className="mx-4 w-2/4 h-5 bg-gray-200 rounded dark:bg-gray-700">
-              <div
-                className="h-5 bg-yellow-400 rounded"
-                style={{ width: '17%' }}
-              ></div>
-            </div>
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              17%
-            </span>
-          </div>
-          <div className="flex items-center mt-4">
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              3 star
-            </span>
-            <div className="mx-4 w-2/4 h-5 bg-gray-200 rounded dark:bg-gray-700">
-              <div
-                className="h-5 bg-yellow-400 rounded"
-                style={{ width: ' 8%' }}
-              ></div>
-            </div>
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              8%
-            </span>
-          </div>
-          <div className="flex items-center mt-4">
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              2 star
-            </span>
-            <div className="mx-4 w-2/4 h-5 bg-gray-200 rounded dark:bg-gray-700">
-              <div
-                className="h-5 bg-yellow-400 rounded"
-                style={{ width: '4%' }}
-              ></div>
-            </div>
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              4%
-            </span>
-          </div>
-          <div className="flex items-center mt-4">
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              1 star
-            </span>
-            <div className="mx-4 w-2/4 h-5 bg-gray-200 rounded dark:bg-gray-700">
-              <div
-                className="h-5 bg-yellow-400 rounded"
-                style={{ width: '1%' }}
-              ></div>
-            </div>
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-500">
-              1%
-            </span>
-          </div> */}
         </div>
       </div>
     </LayoutHome>
+  );
+};
+
+const QuantityPicker = ({ productPrice = 0 }: { productPrice?: number }) => {
+  const [quantity, setQuantity] = React.useState<number>(1);
+  const handleIncrease = () => {
+    if (quantity === 5) return;
+    setQuantity(quantity + 1);
+  };
+  const handleDecrease = () => {
+    if (quantity === 1) return;
+    setQuantity(quantity - 1);
+  };
+  return (
+    <div className="mt-4">
+      <div className="grid grid-cols-2 gap-2 items-center bg-white">
+        <div className="col-span-1 grid grid-cols-3 gap-1">
+          <div className="col-span-1 flex items-center justify-end">
+            <button
+              className="bg-black flex items-center justify-center p-1 rounded-md"
+              onClick={handleDecrease}
+            >
+              <IconMinus size={24} strokeWidth={2} color="#fff" />
+            </button>
+          </div>
+
+          <div className="col-span-1 flex items-center justify-center">
+            <span className="text-[18px]">{quantity}</span>
+          </div>
+          <div className="col-span-1 flex items-center justify-start">
+            <button
+              className="bg-black flex items-center justify-center p-1 rounded-md"
+              onClick={handleIncrease}
+            >
+              <IconPlus size={24} strokeWidth={2} color="#fff" />
+            </button>
+          </div>
+        </div>
+        <div className="col-span-1">
+          <span className="text-sm text-gray_C1 italic">
+            (Mua tối đa 5 sản phẩm)
+          </span>
+        </div>
+      </div>
+      <div className="mt-2">
+        <p className="text-[16px] text-center text-dark_3">
+          Tổng tạm tính:{' '}
+          <span className="text-yellow_E3 italic">
+            {formatMoney(productPrice * quantity)} VND
+          </span>
+        </p>
+      </div>
+    </div>
   );
 };
 
