@@ -111,6 +111,8 @@ const OrderTrackingPage = (props: Props) => {
             </div>
           </div>
 
+          <div className="flex ml-auto"></div>
+
           <div className="flex flex-col gap-y-2 w-max ml-auto">
             <p className="flex">
               <span className="mr-[60px] font-semibold">Tạm tính:</span>{' '}
