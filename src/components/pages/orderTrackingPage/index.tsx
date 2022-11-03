@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
+import Divider from '~/components/common/divider';
 import { formatMoney } from '~/helpers/base.helper';
 import LayoutHome from '~/layouts/LayoutHome';
 import OrderStatusProgress from './components/orderStatusProgress';
@@ -30,12 +31,13 @@ const OrderTrackingPage = (props: Props) => {
       <OrderStatusProgress status={1} />
       <div className="grid grid-cols-12 w-full gap-5">
         <div className="col-span-8 border border-gray_C1 rounded-md p-3">
-          <div className="flex items-center gap-1 mb-4">
+          <div className="flex items-center gap-1">
             <IconShoppingCart size={16} stroke={2} color="#333333" />
             <span className="text-dark_3 font-semibold text-md max_line-1">
               Sản phẩm
             </span>
           </div>
+          <Divider className="h-[1px] my-3" />
 
           <div className="flex flex-col gap-y-4 mb-4">
             <div className="grid grid-cols-12 gap-2">
@@ -134,21 +136,23 @@ const OrderTrackingPage = (props: Props) => {
         </div>
 
         <div className="col-span-4 border border-gray_C1 rounded-md p-3">
-          <div className="flex items-center gap-1 mb-4">
+          <div className="flex items-center gap-1">
             <IconReceipt2 size={16} stroke={2} color="#333333" />
             <span className="text-dark_3 font-semibold text-md max_line-1">
               Hóa đơn
             </span>
           </div>
+          <Divider className="h-[1px] my-3" />
         </div>
 
         <div className="col-span-12 border border-gray_C1 rounded-md p-3">
-          <div className="flex items-center gap-1 mb-4">
+          <div className="flex items-center gap-1">
             <IconInfoCircle size={16} stroke={2} color="#333333" />
             <span className="text-dark_3 font-semibold text-md max_line-1">
               Thông tin khách hàng
             </span>
           </div>
+          <Divider className="h-[1px] my-3" />
         </div>
       </div>
     </LayoutHome>

@@ -34,6 +34,13 @@ export default function Home() {
           />
         </div>
       </div>
+      {/* Bestseller */}
+      <div className="mt-8">
+        <p className="text-center text-2xl uppercase font-bold">
+          Bán chạy nhất
+        </p>
+        <div className="mt-4 bg-baseColor p-2"></div>
+      </div>
     </LayoutHome>
   );
 }
