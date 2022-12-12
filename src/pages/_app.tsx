@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 import '~/styles/globals.css';
 import '~/styles/modal.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -20,6 +21,13 @@ export default function App(props: AppProps) {
         />
       </Head>
       <Component {...pageProps} />
+      <Toaster
+        position="top-right"
+        reverseOrder={true}
+        toastOptions={{
+          duration: 4000,
+        }}
+      />
     </React.Fragment>
   );
 }

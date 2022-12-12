@@ -1,12 +1,15 @@
 import { IconDeviceMobile, IconKey } from '@tabler/icons';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import ErrorText from '~/components/common/errorText';
 import Flex from '~/components/common/flex';
 import ImageRender from '~/components/common/imageRender';
 import { MODAL_KEYS } from '~/constants/modal.constants';
 import { PHONE_REGEX } from '~/constants/regex.constants';
+import { responseHasError } from '~/helpers/base.helper';
 import { closeModalOrDrawer, openModalOrDrawer } from '~/helpers/modal.helper';
+import API from '~/services/axiosClient';
 
 const ModalLogin = () => {
   const {
@@ -17,11 +20,18 @@ const ModalLogin = () => {
 
   const handleLogin = async (data: any) => {
     try {
-      console.log(
-        'MasSu => file: index.tsx => line 12 => handleLogin => data',
-        data
-      );
-    } catch (error) {}
+      const result = await API.post({
+        url: '/api/auth/login',
+        body: {
+          username: data.phone,
+          password: data.password,
+        },
+      });
+
+      if (responseHasError(result.error)) throw new Error(result.message);
+    } catch (error) {
+      toast.error(error?.message || error?.data?.message);
+    }
   };
 
   return (

@@ -12,3 +12,18 @@ export const getFromLocalStorage = (key: string): any => {
 };
 
 export const getLengthArray = (array: any[]): number => array.length;
+
+type ErrorResponseType = boolean | undefined;
+
+export const responseHasError = (err: ErrorResponseType) =>
+  [null, undefined, NaN, true].some((type) => type === err);
+
+type ErrorResponseAllType = ErrorResponseType | Array<boolean | undefined>;
+
+export const responseHasErrorAll = (err: ErrorResponseAllType) => {
+  let _err: ErrorResponseAllType = err;
+  if (!Array.isArray(err)) _err = [err];
+  return (_err as ErrorResponseType[]).some((err) =>
+    [null, undefined, NaN, true].some((type) => type === err)
+  );
+};

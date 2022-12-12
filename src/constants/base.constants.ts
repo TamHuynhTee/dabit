@@ -1,3 +1,3 @@
-export enum BASE_CONSTANTS {
-  BASE_URL = '',
-}
+export const BASE_CONSTANTS = {
+  BASE_URL: process.env.BASE_URL,
+};
