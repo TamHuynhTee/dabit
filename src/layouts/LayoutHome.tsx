@@ -37,7 +37,7 @@ const LayoutHome = (props: Props) => {
   //   });
 
   return (
-    <React.Fragment>
+    <Flex direction="col" className="min-h-screen">
       <header className={`shadow`}>
         <div className="bg-[#fffd7f]">
           <Flex
@@ -164,7 +164,7 @@ const LayoutHome = (props: Props) => {
       <DrawerContainer drawerKey={DRAWER_KEYS.DRAWER_CART}>
         <DrawerCart />
       </DrawerContainer>
-    </React.Fragment>
+    </Flex>
   );
 };
 

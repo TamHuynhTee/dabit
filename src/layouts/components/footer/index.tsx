@@ -4,7 +4,7 @@ import { DateJS } from '~/helpers/date.helper';
 
 const Footer = () => {
   return (
-    <footer className="">
+    <footer className="mt-auto">
       {/* main content footer */}
       <section className="bg-[#fffd7f]">
         <div className="container mx-auto">
