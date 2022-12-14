@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import ErrorText from '~/components/common/errorText';
 import Flex from '~/components/common/flex';
 import ImageRender from '~/components/common/imageRender';
+import { API_URL } from '~/constants/api.constant';
 import { MODAL_KEYS } from '~/constants/modal.constants';
 import { PHONE_REGEX } from '~/constants/regex.constants';
 import { responseHasError } from '~/helpers/base.helper';
@@ -21,7 +22,7 @@ const ModalLogin = () => {
   const handleLogin = async (data: any) => {
     try {
       const result = await API.post({
-        url: '/api/auth/login',
+        url: API_URL.LOGIN,
         body: {
           username: data.phone,
           password: data.password,

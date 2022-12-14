@@ -6,27 +6,45 @@ import {
 } from '@tabler/icons';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import ErrorText from '~/components/common/errorText';
 import Flex from '~/components/common/flex';
 import ImageRender from '~/components/common/imageRender';
+import { API_URL } from '~/constants/api.constant';
 import { MODAL_KEYS } from '~/constants/modal.constants';
-import { PHONE_REGEX } from '~/constants/regex.constants';
+import {
+  EMAIL_REGEX,
+  PASSWORD_REGEX,
+  PHONE_REGEX,
+} from '~/constants/regex.constants';
+import { responseHasError } from '~/helpers/base.helper';
 import { closeModalOrDrawer, openModalOrDrawer } from '~/helpers/modal.helper';
+import API from '~/services/axiosClient';
 
 const ModalRegister = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
 
   const handleRegister = async (data: any) => {
-    try {
-      console.log(
-        'MasSu => file: index.tsx => line 12 => handleRegister => data',
-        data
-      );
-    } catch (error) {}
+    const { agreeTerms, confirmPassword, ...payload } = data;
+    if (agreeTerms) {
+      try {
+        const result = await API.post({
+          url: API_URL.REGISTER,
+          body: {
+            ...payload,
+          },
+        });
+
+        if (responseHasError(result.error)) throw new Error(result.message);
+      } catch (error) {
+        toast.error(error?.message || error?.data?.message);
+      }
+    }
   };
 
   return (
@@ -54,7 +72,7 @@ const ModalRegister = () => {
                   required: 'Vui lòng nhập số điện thoại',
                   pattern: {
                     value: PHONE_REGEX,
-                    message: 'Số điện thoại không đúng định dạng',
+                    message: 'Số điện thoại không hợp lệ',
                   },
                 })}
                 type="text"
@@ -73,10 +91,10 @@ const ModalRegister = () => {
               <input
                 {...register('email', {
                   required: 'Vui lòng nhập email',
-                  //   pattern: {
-                  //     value: PHONE_REGEX,
-                  //     message: 'Số điện thoại không đúng định dạng',
-                  //   },
+                  pattern: {
+                    value: EMAIL_REGEX,
+                    message: 'Email không hợp lệ',
+                  },
                 })}
                 type="email"
                 className="border-none outline-none bg-transparent flex-1"
@@ -94,9 +112,9 @@ const ModalRegister = () => {
               <input
                 {...register('password', {
                   required: 'Vui lòng nhập mật khẩu',
-                  minLength: {
-                    value: 6,
-                    message: 'Nhập ít nhất 6 ký tự',
+                  pattern: {
+                    value: PASSWORD_REGEX,
+                    message: 'Ít nhất 8 ký tự, ít nhất 1 số và 1 chữ cái',
                   },
                 })}
                 type="password"
@@ -115,9 +133,10 @@ const ModalRegister = () => {
               <input
                 {...register('confirmPassword', {
                   required: 'Vui lòng xác nhận mật khẩu',
-                  minLength: {
-                    value: 6,
-                    message: 'Nhập ít nhất 6 ký tự',
+                  validate: (val: string) => {
+                    if (watch('password') != val) {
+                      return 'Mật khẩu không trùng';
+                    }
                   },
                 })}
                 type="password"
@@ -129,10 +148,21 @@ const ModalRegister = () => {
               <ErrorText text={errors?.confirmPassword.message} />
             )}
           </div>
-          <label htmlFor="agreeTerms" className="flex items-center gap-2">
-            <input type="checkbox" name="agreeTerms" id="agreeTerms" />
-            <span>Tôi đồng ý với các điều khoản sử dụng</span>
-          </label>
+          <div className="">
+            <label htmlFor="agreeTerms" className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="agreeTerms"
+                {...register('agreeTerms', {
+                  required: 'Vui lòng chấp nhận điều khoản sử dụng',
+                })}
+              />
+              <span>Tôi đồng ý với các điều khoản sử dụng</span>
+            </label>
+            {errors?.agreeTerms && (
+              <ErrorText text={errors?.agreeTerms.message} />
+            )}
+          </div>
           <button
             type="submit"
             className="py-[5px] h-[40px] bg-[#000] text-[#fff] rounded"
