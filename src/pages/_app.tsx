@@ -7,12 +7,17 @@ import '~/styles/modal.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import 'tailwindcss/tailwind.css';
+import { Provider, useDispatch } from 'react-redux';
+import { requestProfile } from '~/stores/auth/authSaga';
+import store from '~/stores';
+import AuthSync from '~/middlewares/authSync.middleware';
 
-export default function App(props: AppProps) {
-  const { Component, pageProps } = props;
+function App({ Component, ...rest }: AppProps) {
+  //   const { store, props } = wrapper.useWrappedStore(rest);
+  const { pageProps } = rest;
 
   return (
-    <React.Fragment>
+    <Provider store={store}>
       <Head>
         <title>Dabit Electronic</title>
         <meta
@@ -20,7 +25,9 @@ export default function App(props: AppProps) {
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
-      <Component {...pageProps} />
+      <AuthSync>
+        <Component {...pageProps} />
+      </AuthSync>
       <Toaster
         position="top-right"
         reverseOrder={true}
@@ -28,6 +35,8 @@ export default function App(props: AppProps) {
           duration: 4000,
         }}
       />
-    </React.Fragment>
+    </Provider>
   );
 }
+
+export default App;

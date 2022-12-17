@@ -1,6 +1,6 @@
 import Breadcrumb from '~/components/common/breadcrumbs';
 import { MOBILE_BRANDS } from '~/dumps/brands';
-import LayoutHome from '~/layouts/LayoutHome';
+import Layout from '~/layouts/Layout';
 import BrandFilter from './components/brandFilter';
 import Filter from './components/filter';
 
@@ -8,7 +8,7 @@ type Props = {};
 
 const ProductsPage = (props: Props) => {
   return (
-    <LayoutHome>
+    <Layout>
       <Breadcrumb
         path={[
           {
@@ -21,7 +21,7 @@ const ProductsPage = (props: Props) => {
       <BrandFilter brands={MOBILE_BRANDS} />
       {/* Filter */}
       <Filter brands={MOBILE_BRANDS} />
-    </LayoutHome>
+    </Layout>
   );
 };
 

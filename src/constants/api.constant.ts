@@ -1,7 +1,5 @@
-const LOGIN = '/api/auth/login';
-const REGISTER = '/api/auth/register';
-
 export const API_URL = {
-  LOGIN,
-  REGISTER,
+  LOGIN: '/api/auth/login',
+  REGISTER: '/api/auth/register',
+  PROFILE: '/api/auth/profile',
 };

@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
   content: [
@@ -19,6 +20,8 @@ module.exports = {
       gray_F1: '#f1f1f1',
       gray_C1: '#c1c1c1',
       gray_E1: '#e1e1e1',
+      gray_E7: '#e7e7e7',
+      gray_68: '#686868',
       error: '#ff3b3b',
       black: '#000000',
       white: '#ffffff',
@@ -27,6 +30,7 @@ module.exports = {
       yellow_E3: '#e3a008',
       blue_00: '#0091ff',
       green: '#38c172',
+      sidebar_bg: '#f6fbfc',
     },
 
     extend: {},

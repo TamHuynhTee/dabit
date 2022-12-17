@@ -1,8 +1,15 @@
-import LayoutHome from '~/layouts/LayoutHome';
+// import { GetServerSideProps } from 'next';
+import { GetServerSideProps } from 'next';
+import ProductCard from '~/components/common/productCard';
+import Layout from '~/layouts/Layout';
+import API from '~/services/axiosClient';
+// import { AuthSync } from '~/middlewares/authSync.middleware';
+// import { wrapper } from '~/stores';
 
-export default function Home() {
+export default function Home(props) {
+  const { bestseller } = props;
   return (
-    <LayoutHome>
+    <Layout>
       {/* Banner */}
       <div className="grid grid-cols-12 grid-rows-6 grid-flow-row-dense gap-y-3 gap-x-3">
         <div className="col-span-8 row-span-full">
@@ -39,8 +46,29 @@ export default function Home() {
         <p className="text-center text-2xl uppercase font-bold">
           Bán chạy nhất
         </p>
-        <div className="mt-4 bg-baseColor p-2"></div>
+        <div className="mt-4 bg-baseColor p-2">
+          <div className="grid grid-cols-5 gap-x-3">
+            {bestseller?.data?.map((e, i) => {
+              return <ProductCard key={i} />;
+            })}
+          </div>
+        </div>
       </div>
-    </LayoutHome>
+    </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const bestseller = await API.get({ url: '/api/product/list' });
+    return {
+      props: {
+        bestseller: bestseller.data,
+      },
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
+};

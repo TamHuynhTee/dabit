@@ -1,3 +1,4 @@
 export enum LOCAL_STORAGE_KEY {
-  ACCESS_TOKEN = 'access_token',
+  CART_PRODUCT_KEY = 'cart_product',
+  CART_COUNT_KEY = 'cart_count',
 }

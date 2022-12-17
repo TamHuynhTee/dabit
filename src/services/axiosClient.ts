@@ -1,12 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import queryString from 'query-string';
-import https from 'https';
 import { BASE_CONSTANTS } from '~/constants/base.constants';
 import { ReturnResponse } from './response.interface';
-
-const httpsAgent = new https.Agent({
-  keepAlive: true,
-});
+import { getCookie } from '~/helpers/cookie.helper';
+import { COOKIE_KEYS } from '~/constants/cookie.constants';
 
 const axiosClient = axios.create({
   baseURL: BASE_CONSTANTS.BASE_URL,
@@ -24,11 +21,11 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    console.log(config);
+    // console.log(config);
     return config;
   },
   (err) => {
-    console.log(err.response);
+    // console.log(err.response);
     return Promise.reject(err);
   }
 );
@@ -67,15 +64,23 @@ interface requestCredentials {
   headers?: Record<string, any>;
 }
 
+export const getAuthHeader = (outsideToken: string) => {
+  let _token = outsideToken;
+  if (!_token) {
+    _token = getCookie(COOKIE_KEYS.ACCESS_TOKEN);
+  }
+
+  return {
+    Authorization: `Bearer ${_token}`,
+  };
+};
+
 const API = {
   get: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
-    return axiosClient
-      .get(cre.url, {
-        httpsAgent,
-        params: cre.params || {},
-        headers: cre.headers || {},
-      })
-      .then((response) => response.data);
+    return axiosClient.get(cre.url, {
+      params: cre.params || {},
+      headers: cre.headers || {},
+    });
   },
 
   post: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {

@@ -2,13 +2,13 @@ import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import { MODAL_KEYS } from '~/constants/modal.constants';
 import { openModalOrDrawer } from '~/helpers/modal.helper';
-import LayoutHome from '~/layouts/LayoutHome';
+import Layout from '~/layouts/Layout';
 
 type Props = {};
 
 const CheckOrderPage = (props: Props) => {
   return (
-    <LayoutHome>
+    <Layout>
       <Breadcrumb
         path={[
           {
@@ -18,7 +18,7 @@ const CheckOrderPage = (props: Props) => {
         ]}
       />
       <CheckOrderForm />
-    </LayoutHome>
+    </Layout>
   );
 };
 

@@ -6,11 +6,20 @@ import ErrorText from '~/components/common/errorText';
 import Flex from '~/components/common/flex';
 import ImageRender from '~/components/common/imageRender';
 import { API_URL } from '~/constants/api.constant';
+import { COOKIE_KEYS } from '~/constants/cookie.constants';
 import { MODAL_KEYS } from '~/constants/modal.constants';
 import { PHONE_REGEX } from '~/constants/regex.constants';
 import { responseHasError } from '~/helpers/base.helper';
+import { setCookie } from '~/helpers/cookie.helper';
 import { closeModalOrDrawer, openModalOrDrawer } from '~/helpers/modal.helper';
+import { ACCESS_REFRESH_TOKEN } from '~/models/token.model';
+import { USER_MODEL } from '~/models/user.model';
 import API from '~/services/axiosClient';
+
+interface IResLogin {
+  user: USER_MODEL;
+  tokens: ACCESS_REFRESH_TOKEN;
+}
 
 const ModalLogin = () => {
   const {
@@ -21,7 +30,7 @@ const ModalLogin = () => {
 
   const handleLogin = async (data: any) => {
     try {
-      const result = await API.post({
+      const result = await API.post<IResLogin>({
         url: API_URL.LOGIN,
         body: {
           username: data.phone,
@@ -30,6 +39,12 @@ const ModalLogin = () => {
       });
 
       if (responseHasError(result.error)) throw new Error(result.message);
+      toast.success('Đăng nhập thành công');
+
+      setCookie(COOKIE_KEYS.ACCESS_TOKEN, result.data.tokens.access.token);
+      setCookie(COOKIE_KEYS.REFRESH_TOKEN, result.data.tokens.refresh.token);
+
+      closeModalOrDrawer(MODAL_KEYS.MODAL_LOGIN);
     } catch (error) {
       toast.error(error?.message || error?.data?.message);
     }

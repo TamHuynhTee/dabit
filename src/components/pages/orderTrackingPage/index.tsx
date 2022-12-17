@@ -6,7 +6,7 @@ import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
 import { formatMoney } from '~/helpers/base.helper';
-import LayoutHome from '~/layouts/LayoutHome';
+import Layout from '~/layouts/Layout';
 import OrderStatusProgress from './components/orderStatusProgress';
 
 type Props = {};
@@ -15,7 +15,7 @@ const OrderTrackingPage = (props: Props) => {
   const { query } = useRouter();
 
   return (
-    <LayoutHome>
+    <Layout>
       <Breadcrumb
         path={[
           {
@@ -155,7 +155,7 @@ const OrderTrackingPage = (props: Props) => {
           <Divider className="h-[1px] my-3" />
         </div>
       </div>
-    </LayoutHome>
+    </Layout>
   );
 };
 

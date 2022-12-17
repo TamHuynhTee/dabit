@@ -3,6 +3,7 @@ import {
   IconKey,
   IconMail,
   IconShieldLock,
+  IconUserCircle,
 } from '@tabler/icons';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -102,6 +103,25 @@ const ModalRegister = () => {
               />
             </Flex>
             {errors?.email && <ErrorText text={errors?.email.message} />}
+          </div>
+          <div>
+            <Flex
+              className="py-[5px] h-[40px] gap-3 border-b border-b-[#c3c3c3]"
+              alignItem="center"
+            >
+              <IconUserCircle size={20} />
+              <input
+                {...register('name', {
+                  required: 'Vui lòng nhập họ tên',
+                  minLength: 5,
+                  maxLength: 30,
+                })}
+                type="email"
+                className="border-none outline-none bg-transparent flex-1"
+                placeholder="Nhập họ tên (bắt buộc)"
+              />
+            </Flex>
+            {errors?.name && <ErrorText text={errors?.name.message} />}
           </div>
           <div>
             <Flex

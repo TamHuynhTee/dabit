@@ -2,15 +2,15 @@ import { IconX } from '@tabler/icons';
 import Link from 'next/link';
 import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
-import LayoutHome from '~/layouts/LayoutHome';
+import Layout from '~/layouts/Layout';
 
 type Props = {};
 
 const CartPage = (props: Props) => {
   return (
-    <LayoutHome>
+    <Layout>
       <CartSection />
-    </LayoutHome>
+    </Layout>
   );
 };
 

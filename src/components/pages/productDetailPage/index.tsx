@@ -8,7 +8,7 @@ import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
 import { formatMoney } from '~/helpers/base.helper';
-import LayoutHome from '~/layouts/LayoutHome';
+import Layout from '~/layouts/Layout';
 import GallerySlider from './components/GallerySlider';
 import Ratings from './components/RatingsSummary';
 import styles from './style.module.css';
@@ -105,7 +105,7 @@ const ProductDetailPage = (props: Props) => {
   const [currentColor, setCurrentColor] = React.useState<string>('blue');
   const [isFavorite, setIsFavorite] = React.useState<boolean>(false);
   return (
-    <LayoutHome>
+    <Layout>
       <Breadcrumb
         path={[
           {
@@ -408,7 +408,7 @@ const ProductDetailPage = (props: Props) => {
           </div>
         </div>
       </div>
-    </LayoutHome>
+    </Layout>
   );
 };
 

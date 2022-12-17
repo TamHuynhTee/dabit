@@ -1,0 +1,29 @@
+.product_name {
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 14px;
+  height: 65px;
+  font-weight: 600;
+  position: relative;
+  z-index: 10;
+}
+
+.box_price {
+  color: #444;
+  line-height: 1.4;
+  align-items: flex-end;
+  font-family: sans-serif;
+  display: flex;
+  font-weight: 700;
+}
+
+.product__price {
+  display: inline-block;
+  margin-bottom: 10px !important;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #d70018;
+}
