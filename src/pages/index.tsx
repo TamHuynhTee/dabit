@@ -67,6 +67,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
+    console.log(`file: index.tsx:70 => error`, error)
     return {
       notFound: true,
     };
