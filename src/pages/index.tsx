@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import ProductCard from '~/components/common/productCard';
 import Layout from '~/layouts/Layout';
 import API from '~/services/axiosClient';
+import { ReturnResponse } from '~/services/response.interface';
 // import { AuthSync } from '~/middlewares/authSync.middleware';
 // import { wrapper } from '~/stores';
 
@@ -60,14 +61,16 @@ export default function Home(props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const bestseller = await API.get({ url: '/api/product/list' });
+    const bestseller = await API.get<ReturnResponse<any>>({
+      url: '/api/product/list',
+    });
     return {
       props: {
         bestseller: bestseller.data,
       },
     };
   } catch (error) {
-    console.log(`file: index.tsx:70 => error`, error)
+    console.log(`file: index.tsx:70 => error`, error);
     return {
       notFound: true,
     };

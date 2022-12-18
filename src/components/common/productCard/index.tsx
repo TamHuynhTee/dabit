@@ -1,5 +1,6 @@
 import { IconShoppingCartPlus } from '@tabler/icons';
 import Link from 'next/link';
+import { formatCurrency2 } from '~/helpers/base.helper';
 import FavoriteButton from '../favoriteButton';
 import styles from './style.module.css';
 
@@ -19,8 +20,12 @@ const ProductCard = (props: any) => {
             iPhone 13 Pro Max 128GB | Chính hãng VN/A
           </h3>
           <div className={styles.box_price}>
-            <span className={styles.product__price}>10.790.000 ₫</span>
-            <span className={styles.product__price__old}>14.790.000 ₫</span>
+            <span className={styles.product__price}>
+              {formatCurrency2(10790000)}
+            </span>
+            <span className={styles.product__price__old}>
+              {formatCurrency2(14790000)}
+            </span>
           </div>
         </a>
       </Link>

@@ -1,5 +1,12 @@
-export const formatMoney = (money: number): string =>
-  money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// export const formatMoney = (money: number): string =>
+//   money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+export const formatCurrency2 = (value?: number) => {
+  if (!value) return '0 ₫';
+  return value
+    .toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
+    .replace('VND', '₫');
+};
 
 export const saveToLocalStorage = (key: string, value: any) => {
   if (typeof window === 'undefined') return;

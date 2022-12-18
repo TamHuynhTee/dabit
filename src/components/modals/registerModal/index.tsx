@@ -12,6 +12,7 @@ import ErrorText from '~/components/common/errorText';
 import Flex from '~/components/common/flex';
 import ImageRender from '~/components/common/imageRender';
 import { API_URL } from '~/constants/api.constant';
+import { COOKIE_KEYS } from '~/constants/cookie.constants';
 import { MODAL_KEYS } from '~/constants/modal.constants';
 import {
   EMAIL_REGEX,
@@ -19,8 +20,17 @@ import {
   PHONE_REGEX,
 } from '~/constants/regex.constants';
 import { responseHasError } from '~/helpers/base.helper';
+import { setCookie } from '~/helpers/cookie.helper';
 import { closeModalOrDrawer, openModalOrDrawer } from '~/helpers/modal.helper';
+import { ACCESS_REFRESH_TOKEN } from '~/models/token.model';
+import { USER_MODEL } from '~/models/user.model';
 import API from '~/services/axiosClient';
+import { ReturnResponse } from '~/services/response.interface';
+
+interface IResRegister {
+  user: USER_MODEL;
+  tokens: ACCESS_REFRESH_TOKEN;
+}
 
 const ModalRegister = () => {
   const {
@@ -34,7 +44,7 @@ const ModalRegister = () => {
     const { agreeTerms, confirmPassword, ...payload } = data;
     if (agreeTerms) {
       try {
-        const result = await API.post({
+        const result = await API.post<ReturnResponse<IResRegister>>({
           url: API_URL.REGISTER,
           body: {
             ...payload,
@@ -42,6 +52,13 @@ const ModalRegister = () => {
         });
 
         if (responseHasError(result.error)) throw new Error(result.message);
+
+        setCookie(COOKIE_KEYS.ACCESS_TOKEN, result.data.tokens.access.token);
+        setCookie(COOKIE_KEYS.REFRESH_TOKEN, result.data.tokens.refresh.token);
+
+        toast.success('Đăng ký thành công');
+
+        window.location.reload();
       } catch (error) {
         toast.error(error?.message || error?.data?.message);
       }
@@ -116,7 +133,7 @@ const ModalRegister = () => {
                   minLength: 5,
                   maxLength: 30,
                 })}
-                type="email"
+                type="text"
                 className="border-none outline-none bg-transparent flex-1"
                 placeholder="Nhập họ tên (bắt buộc)"
               />

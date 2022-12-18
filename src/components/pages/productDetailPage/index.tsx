@@ -7,7 +7,7 @@ import {
 import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
-import { formatMoney } from '~/helpers/base.helper';
+import { formatCurrency2 } from '~/helpers/base.helper';
 import Layout from '~/layouts/Layout';
 import GallerySlider from './components/GallerySlider';
 import Ratings from './components/RatingsSummary';
@@ -141,10 +141,10 @@ const ProductDetailPage = (props: Props) => {
           {/* Price */}
           <div className="flex items-center gap-2">
             <p className="text-[22px] text-yellow_E3 font-bold">
-              {formatMoney(22000000)} VND
+              {formatCurrency2(22000000)}
             </p>
             <p className="text-[16px] text-dark_3 font-semibold line-through">
-              {formatMoney(26000000)} VND
+              {formatCurrency2(26000000)}
             </p>
           </div>
           {/* Properties */}
@@ -167,7 +167,7 @@ const ProductDetailPage = (props: Props) => {
                   >
                     <span className={` text-sm font-semibold`}>{e.title}</span>
                     <span className={` text-xs font-normal`}>
-                      {formatMoney(e.price)} VND
+                      {formatCurrency2(e.price)}
                     </span>
                   </div>
                 );
@@ -204,7 +204,7 @@ const ProductDetailPage = (props: Props) => {
                         {e.title}
                       </span>
                       <span className={` text-xs font-normal`}>
-                        {formatMoney(e.price)} VND
+                        {formatCurrency2(e.price)}
                       </span>
                     </div>
                   </div>
@@ -312,7 +312,7 @@ const ProductDetailPage = (props: Props) => {
                 {e.name}
               </p>
               <p className="max_line-1 font-semibold text-lg text-yellow_E3 text-center">
-                {formatMoney(e.price)} VND
+                {formatCurrency2(e.price)}
               </p>
             </div>
           ))}
@@ -339,7 +339,7 @@ const ProductDetailPage = (props: Props) => {
                 {e.name}
               </p>
               <p className="max_line-1 font-semibold text-lg text-yellow_E3 text-center">
-                {formatMoney(e.price)} VND
+                {formatCurrency2(e.price)}
               </p>
             </div>
           ))} */}
@@ -457,7 +457,7 @@ const QuantityPicker = ({ productPrice = 0 }: { productPrice?: number }) => {
         <p className="text-[16px] text-center text-dark_3">
           Tổng tạm tính:{' '}
           <span className="text-yellow_E3 italic">
-            {formatMoney(productPrice * quantity)} VND
+            {formatCurrency2(productPrice * quantity)}
           </span>
         </p>
       </div>

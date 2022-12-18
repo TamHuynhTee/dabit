@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import queryString from 'query-string';
 import { BASE_CONSTANTS } from '~/constants/base.constants';
-import { ReturnResponse } from './response.interface';
 import { getCookie } from '~/helpers/cookie.helper';
 import { COOKIE_KEYS } from '~/constants/cookie.constants';
 
@@ -76,46 +75,46 @@ export const getAuthHeader = (outsideToken: string) => {
 };
 
 const API = {
-  get: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
+  get: <T>(cre: requestCredentials): Promise<T> => {
     return axiosClient.get(cre.url, {
       params: cre.params || {},
       headers: cre.headers || {},
     });
   },
 
-  post: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
+  post: <T>(cre: requestCredentials): Promise<T> => {
     return axiosClient.post(cre.url, cre.body, {
       params: cre.params || {},
       headers: cre.headers || {},
     });
   },
-  postFormData: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
+  postFormData: <T>(cre: requestCredentials): Promise<T> => {
     return axiosClient.post(cre.url, cvtObjectToFormData(cre.body || {}), {
       params: cre.params || {},
       headers: cre.headers || {},
     });
   },
 
-  put: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
+  put: <T>(cre: requestCredentials): Promise<T> => {
     return axiosClient.put(cre.url, cre.body || {}, {
       params: cre.params || {},
       headers: cre.headers || {},
     });
   },
 
-  patch: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
+  patch: <T>(cre: requestCredentials): Promise<T> => {
     return axiosClient.patch(cre.url, cre.body || {}, {
       params: cre.params || {},
       headers: cre.headers || {},
     });
   },
-  patchFormData: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
+  patchFormData: <T>(cre: requestCredentials): Promise<T> => {
     return axiosClient.patch(cre.url, cvtObjectToFormData(cre.body || {}), {
       params: cre.params || {},
       headers: cre.headers || {},
     });
   },
-  delete: <T>(cre: requestCredentials): Promise<ReturnResponse<T>> => {
+  delete: <T>(cre: requestCredentials): Promise<T> => {
     return axiosClient.delete(cre.url, {
       params: cre.params || {},
       headers: cre.headers || {},

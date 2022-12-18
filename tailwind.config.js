@@ -33,6 +33,7 @@ module.exports = {
       sidebar_bg: '#f6fbfc',
       checkout_bg: '#f9f3f0',
       text_input: '#777777',
+      error: '#d70018',
     },
 
     extend: {},
