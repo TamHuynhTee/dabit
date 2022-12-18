@@ -31,6 +31,8 @@ module.exports = {
       blue_00: '#0091ff',
       green: '#38c172',
       sidebar_bg: '#f6fbfc',
+      checkout_bg: '#f9f3f0',
+      text_input: '#777777',
     },
 
     extend: {},
