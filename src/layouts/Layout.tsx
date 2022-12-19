@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
 import {
-  //   IconHeart,
   IconHistory,
   IconMailForward,
   IconPhone,
@@ -25,13 +24,15 @@ import HeaderSearch from './components/headerSearch';
 import ModalRegister from '~/components/modals/registerModal';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '~/stores/auth/authSlice';
+import { CATEGORY_MODEL } from '~/models/category.model';
 
 type Props = {
   children: React.ReactNode;
+  categories?: Array<CATEGORY_MODEL>;
 };
 
 const Layout = (props: Props) => {
-  const { children } = props;
+  const { children, categories = [] } = props;
 
   const authState = useSelector(selectAuthState);
   const isLoggedIn = authState.signedIn;
@@ -162,7 +163,7 @@ const Layout = (props: Props) => {
             </div>
           </div>
           {/* Category section */}
-          <CategorySection />
+          <CategorySection categories={categories} />
         </header>
         {/* body */}
         <main className="flex-grow">

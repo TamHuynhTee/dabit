@@ -12,9 +12,9 @@ import { selectAuthState } from '~/stores/auth/authSlice';
 
 type Props = {};
 
-const CheckOrderPage = (props: Props) => {
+const CheckOrderPage = (props: any) => {
   return (
-    <Layout>
+    <Layout categories={props?.categories || []}>
       <Breadcrumb
         path={[
           {

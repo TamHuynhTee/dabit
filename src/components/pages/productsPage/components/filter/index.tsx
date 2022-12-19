@@ -2,12 +2,12 @@ import { IconCpu, IconDeviceFloppy, IconFilter } from '@tabler/icons';
 import FilterDropdown from '../filterDropdown';
 
 const Filter = (props: { brands: Array<{ icon: string; value: string }> }) => {
-  const { brands } = props;
+  //   const { brands } = props;
   return (
     <div className="mt-4">
-      <p className="my-2 text-[16px] font-semibold uppercase text-gray_B9">
+      {/* <p className="my-2 text-[16px] font-semibold uppercase text-gray_B9">
         Bộ lọc
-      </p>
+      </p> */}
       <div className="flex flex-wrap gap-2 items-center bg-white">
         <FilterDropdown
           nameFilter="Bộ lọc"

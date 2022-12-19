@@ -1,16 +1,14 @@
-// import { GetServerSideProps } from 'next';
 import { GetServerSideProps } from 'next';
 import ProductCard from '~/components/common/productCard';
 import Layout from '~/layouts/Layout';
 import API from '~/services/axiosClient';
+import { getCategories } from '~/services/request';
 import { ReturnResponse } from '~/services/response.interface';
-// import { AuthSync } from '~/middlewares/authSync.middleware';
-// import { wrapper } from '~/stores';
 
 export default function Home(props) {
-  const { bestseller } = props;
+  const { bestseller, categories } = props;
   return (
-    <Layout>
+    <Layout categories={categories}>
       {/* Banner */}
       <div className="grid grid-cols-12 grid-rows-6 grid-flow-row-dense gap-y-3 gap-x-3">
         <div className="col-span-8 row-span-full">
@@ -49,9 +47,9 @@ export default function Home(props) {
         </p>
         <div className="mt-4 bg-baseColor p-2">
           <div className="grid grid-cols-5 gap-x-3">
-            {bestseller?.data?.map((e, i) => {
+            {/* {bestseller?.data?.map((e, i) => {
               return <ProductCard key={i} />;
-            })}
+            })} */}
           </div>
         </div>
       </div>
@@ -61,12 +59,17 @@ export default function Home(props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
+    const categories = await getCategories();
     const bestseller = await API.get<ReturnResponse<any>>({
       url: '/api/product/list',
     });
+
+    const data = await Promise.all([categories, bestseller]);
+
     return {
       props: {
-        bestseller: bestseller.data,
+        categories: data?.[0]?.data,
+        bestseller: data?.[1]?.data,
       },
     };
   } catch (error) {

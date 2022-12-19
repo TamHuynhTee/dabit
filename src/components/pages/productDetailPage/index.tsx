@@ -100,12 +100,12 @@ const similarities = [
   },
 ];
 
-const ProductDetailPage = (props: Props) => {
+const ProductDetailPage = (props: any) => {
   const [currentProperty, setCurrentProperty] = React.useState<string>('512gb');
   const [currentColor, setCurrentColor] = React.useState<string>('blue');
   const [isFavorite, setIsFavorite] = React.useState<boolean>(false);
   return (
-    <Layout>
+    <Layout categories={props?.categories || []}>
       <Breadcrumb
         path={[
           {

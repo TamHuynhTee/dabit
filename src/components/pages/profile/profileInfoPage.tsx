@@ -3,13 +3,13 @@ import React from 'react';
 import Layout from '~/layouts/Layout';
 import ProfilePageFrame from './components/profilePageFrame';
 
-const ProfileInfoPage = () => {
+const ProfileInfoPage = (props: any) => {
   return (
     <>
       <Head>
         <title>Thông tin cá nhân</title>
       </Head>
-      <Layout>
+      <Layout categories={props?.categories || []}>
         <ProfilePageFrame>a</ProfilePageFrame>
       </Layout>
     </>

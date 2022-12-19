@@ -2,11 +2,19 @@ import { IconMenu2 } from '@tabler/icons';
 import React from 'react';
 import Divider from '~/components/common/divider';
 import Flex from '~/components/common/flex';
-import { CATEGORIES } from '~/dumps/categories';
 import AllCatePanel from '../AllCatePanel';
 import styles from '../../layout.module.css';
+import { CATEGORY_MODEL } from '~/models/category.model';
+import Link from 'next/link';
+import { categoryURL } from '~/helpers/url.helper';
 
-const CategorySection = () => {
+type Props = {
+  categories: Array<CATEGORY_MODEL>;
+};
+
+const CategorySection = (props: Props) => {
+  const { categories } = props;
+
   React.useEffect(() => {
     const _toggle = document.querySelector(`.${styles.all_categories__toggle}`);
     const _panel = document.querySelector(`.${styles.all_categories__panel}`);
@@ -44,18 +52,28 @@ const CategorySection = () => {
                 <span className="text-[#fff]">Tất cả</span>
               </Flex>
               {/* all cates panel */}
-              <AllCatePanel />
+              <AllCatePanel categories={categories} />
             </Flex>
           </div>
-          {CATEGORIES.map((cate, cateIndex) => (
+          {categories?.map((cate, cateIndex) => (
             <div className="col-span-2" key={cateIndex}>
-              <Flex
-                alignItem="center"
-                className={`h-full transition duration-200 ease-in gap-2 justify-center rounded-[5px] cursor-pointer bg-[#fffd7f] hover:bg-[#fff] hover:border-2 hover:border-[#000]`}
-              >
-                <span>{cate.icon}</span>
-                <span className="text-[#000]">{cate.nameCate}</span>
-              </Flex>
+              <Link href={categoryURL(cate._id)}>
+                <a className="h-full">
+                  <Flex
+                    alignItem="center"
+                    className={`h-full transition duration-200 ease-in gap-2 justify-center rounded-[5px] cursor-pointer bg-[#fffd7f] hover:bg-[#fff] hover:border-2 hover:border-[#000]`}
+                  >
+                    <span className="h-[24px] w-[24px]">
+                      <img
+                        src={cate.icon_url}
+                        alt="category_icon"
+                        className="h-full w-full object-contain"
+                      />
+                    </span>
+                    <span className="text-[#000]">{cate.name}</span>
+                  </Flex>
+                </a>
+              </Link>
             </div>
           ))}
         </div>

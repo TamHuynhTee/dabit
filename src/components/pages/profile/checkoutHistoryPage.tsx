@@ -5,13 +5,13 @@ import ProfilePageFrame from './components/profilePageFrame';
 
 type Props = {};
 
-const ProfileInfoPage = (props: Props) => {
+const ProfileInfoPage = (props: any) => {
   return (
     <>
       <Head>
         <title>Lịch sử mua hàng</title>
       </Head>
-      <Layout>
+      <Layout categories={props?.categories || []}>
         <ProfilePageFrame>a</ProfilePageFrame>
       </Layout>
     </>

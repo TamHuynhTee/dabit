@@ -11,11 +11,11 @@ import OrderStatusProgress from './components/orderStatusProgress';
 
 type Props = {};
 
-const OrderTrackingPage = (props: Props) => {
+const OrderTrackingPage = (props: any) => {
   const { query } = useRouter();
 
   return (
-    <Layout>
+    <Layout categories={props?.categories || []}>
       <Breadcrumb
         path={[
           {

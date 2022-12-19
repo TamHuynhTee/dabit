@@ -6,9 +6,9 @@ import Filter from './components/filter';
 
 type Props = {};
 
-const ProductsPage = (props: Props) => {
+const ProductsPage = (props: any) => {
   return (
-    <Layout>
+    <Layout categories={props.categories || []}>
       <Breadcrumb
         path={[
           {
@@ -18,7 +18,7 @@ const ProductsPage = (props: Props) => {
         ]}
       />
       {/* Brands */}
-      <BrandFilter brands={MOBILE_BRANDS} />
+      {/* <BrandFilter brands={MOBILE_BRANDS} /> */}
       {/* Filter */}
       <Filter brands={MOBILE_BRANDS} />
     </Layout>

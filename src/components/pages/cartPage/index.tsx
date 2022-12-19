@@ -6,9 +6,9 @@ import Layout from '~/layouts/Layout';
 
 type Props = {};
 
-const CartPage = (props: Props) => {
+const CartPage = (props: any) => {
   return (
-    <Layout>
+    <Layout categories={props?.categories || []}>
       <CartSection />
     </Layout>
   );

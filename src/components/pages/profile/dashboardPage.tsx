@@ -3,13 +3,13 @@ import React from 'react';
 import Layout from '~/layouts/Layout';
 import ProfilePageFrame from './components/profilePageFrame';
 
-const DashboardPage = () => {
+const DashboardPage = (props) => {
   return (
     <>
       <Head>
         <title>Trang chủ cá nhân</title>
       </Head>
-      <Layout>
+      <Layout categories={props?.categories || []}>
         <ProfilePageFrame>
           <div className="grid grid-cols-2 gap-x-4"></div>
         </ProfilePageFrame>
