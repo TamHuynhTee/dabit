@@ -1,3 +1,12 @@
+.product_card {
+    padding: 10px;
+    @apply bg-white;
+    position: relative;
+    border-radius: 15px;
+    min-height: 200px;
+    padding-bottom: 30px;
+    box-shadow: 0 1px 2px 0 rgb(60 64 67 / 10%), 0 2px 6px 2px rgb(60 64 67 / 15%);
+}
 .product_name {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

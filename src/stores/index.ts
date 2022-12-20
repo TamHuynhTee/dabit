@@ -26,7 +26,6 @@ const makeStore = () => {
   // 4: now return the store
   return store;
 };
-const store = makeStore();
-export default store;
+export const store = makeStore();
 
 export const wrapper = createWrapper(makeStore, { debug: false });

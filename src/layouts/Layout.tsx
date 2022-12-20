@@ -25,6 +25,7 @@ import ModalRegister from '~/components/modals/registerModal';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '~/stores/auth/authSlice';
 import { CATEGORY_MODEL } from '~/models/category.model';
+import useCartHook from '~/hooks/useCart';
 
 type Props = {
   children: React.ReactNode;
@@ -35,6 +36,7 @@ const Layout = (props: Props) => {
   const { children, categories = [] } = props;
 
   const authState = useSelector(selectAuthState);
+  const { cartCount } = useCartHook();
   const isLoggedIn = authState.signedIn;
   const profile = authState?.userInfo;
 
@@ -93,9 +95,11 @@ const Layout = (props: Props) => {
                     </div>
                     <div className="justify-self-center">
                       {isLoggedIn ? (
-                        <button>
-                          Xin chào, {profile?.name?.split(' ')[0]}
-                        </button>
+                        <Link href={`/tai-khoan/trang-chu`}>
+                          <a className="">
+                            Xin chào, {profile?.name?.split(' ')[0]}
+                          </a>
+                        </Link>
                       ) : (
                         <button
                           onClick={() =>
@@ -149,6 +153,7 @@ const Layout = (props: Props) => {
                     className="col-span-1"
                   >
                     <button
+                      className="relative"
                       onClick={() => openModalOrDrawer(DRAWER_KEYS.DRAWER_CART)}
                     >
                       <IconShoppingCart
@@ -156,6 +161,11 @@ const Layout = (props: Props) => {
                         strokeWidth={2}
                         className={`${styles.cart_icon}`}
                       />
+                      {cartCount > 0 && (
+                        <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-xs bg-error rounded-full text-white">
+                          {cartCount}
+                        </span>
+                      )}
                     </button>
                   </Flex>
                 </div>

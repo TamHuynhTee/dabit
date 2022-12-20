@@ -1,6 +1,10 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { defaultRegistry } from 'react-sweet-state';
 import { USER_MODEL } from '~/models/user.model';
+import { CartStore } from '../cart';
+
+const cartInstance = defaultRegistry.getStore(CartStore);
 
 interface IAuth {
   signedIn: boolean;
@@ -23,6 +27,10 @@ export const authSlice = createSlice({
     },
     setProfile(state, action) {
       state.userInfo = action.payload;
+      cartInstance.actions.loadCard({
+        cart: action.payload?.cart || [],
+        total: action.payload?.cart?.length || 0,
+      });
     },
     setFavoriteProducts(state, action) {
       state.userInfo = {
@@ -42,6 +50,6 @@ export const authSlice = createSlice({
 export const { setSignedIn, setFavoriteProducts, setProfile } =
   authSlice.actions;
 
-export const selectAuthState = (state) => state.auth;
+export const selectAuthState = (state: { auth: IAuth }) => state.auth;
 
 export default authSlice.reducer;

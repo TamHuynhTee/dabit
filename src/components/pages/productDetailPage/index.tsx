@@ -7,6 +7,7 @@ import {
 import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
+import StarRating from '~/components/common/starRating';
 import { formatCurrency2 } from '~/helpers/base.helper';
 import Layout from '~/layouts/Layout';
 import GallerySlider from './components/GallerySlider';
@@ -101,9 +102,24 @@ const similarities = [
 ];
 
 const ProductDetailPage = (props: any) => {
+  const { product } = props;
+  const {
+    price = 0,
+    sale: salePercent = 0,
+    total_rate = 0,
+    comments = [],
+    name,
+    desc,
+  } = product;
   const [currentProperty, setCurrentProperty] = React.useState<string>('512gb');
   const [currentColor, setCurrentColor] = React.useState<string>('blue');
   const [isFavorite, setIsFavorite] = React.useState<boolean>(false);
+
+  const newPrice = React.useMemo(
+    () => Math.round(price * (1 - salePercent / 100) * 100) / 100,
+    []
+  );
+
   return (
     <Layout categories={props?.categories || []}>
       <Breadcrumb
@@ -114,16 +130,14 @@ const ProductDetailPage = (props: any) => {
           },
           {
             slug: '/san-pham',
-            name: 'Laptop Apple MacBook Air M1 2020 8GB/256GB/7-core GPU (MGN93SA/A)',
+            name: name,
           },
         ]}
       />
       {/* Info */}
       <div className="mt-4 flex gap-4 items-center">
-        <p className="text-[22px] font-semibold">
-          Laptop Apple MacBook Air M1 2020 8GB/256GB/7-core GPU (MGN93SA/A)
-        </p>
-        <Ratings reviews={175} rating={4.95} />
+        <p className="text-[22px] font-semibold">{name}</p>
+        <Ratings reviews={comments?.length || 0} rating={total_rate || 0} />
       </div>
       <Divider className="h-[2px] my-2" />
 
@@ -141,11 +155,13 @@ const ProductDetailPage = (props: any) => {
           {/* Price */}
           <div className="flex items-center gap-2">
             <p className="text-[22px] text-yellow_E3 font-bold">
-              {formatCurrency2(22000000)}
+              {formatCurrency2(newPrice)}
             </p>
-            <p className="text-[16px] text-dark_3 font-semibold line-through">
-              {formatCurrency2(26000000)}
-            </p>
+            {newPrice > 0 && (
+              <p className="text-[16px] text-dark_3 font-semibold line-through">
+                {formatCurrency2(price)}
+              </p>
+            )}
           </div>
           {/* Properties */}
           <div className="mt-2">
@@ -213,7 +229,7 @@ const ProductDetailPage = (props: any) => {
             </div>
           </div>
           {/* Quantity */}
-          <QuantityPicker productPrice={22000000} />
+          <QuantityPicker productPrice={newPrice} />
           {/* Buttons */}
           <div className="mt-4">
             <div className="grid grid-cols-6 gap-2 items-center bg-white">
@@ -325,24 +341,7 @@ const ProductDetailPage = (props: any) => {
         </p>
 
         <div className="bg-gray_F1 grid grid-cols-5 gap-x-3 p-2 rounded-xl">
-          {/* {similarities.map((e, i) => (
-            <div key={i} className="bg-white rounded-xl p-2">
-              <div className="w-full max-h-[200px] h-auto">
-                <img
-                  src={e.thumbnail}
-                  alt=""
-                  className="w-full h-full max-h-[200px] object-contain"
-                />
-              </div>
-              <Divider className="h-[1px] my-2" />
-              <p className="max_line-3 font-semibold text-lg text-center">
-                {e.name}
-              </p>
-              <p className="max_line-1 font-semibold text-lg text-yellow_E3 text-center">
-                {formatCurrency2(e.price)}
-              </p>
-            </div>
-          ))} */}
+          {desc}
         </div>
       </div>
       <div className="mt-[20px]">
@@ -351,61 +350,7 @@ const ProductDetailPage = (props: any) => {
         </p>
 
         <div className="bg-gray_F1 grid grid-cols-5 gap-x-3 p-2 rounded-xl">
-          <div className="flex items-center mb-3">
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 text-yellow-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>First star</title>
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-            </svg>
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 text-yellow-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Second star</title>
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-            </svg>
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 text-yellow-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Third star</title>
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-            </svg>
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 text-yellow-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Fourth star</title>
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-            </svg>
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 text-gray-300 dark:text-gray-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Fifth star</title>
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-            </svg>
-            <p className="ml-2 text-sm font-medium text-gray-900 dark:text-white">
-              4.95 out of 5
-            </p>
-          </div>
+          <StarRating total_rate={total_rate} />
         </div>
       </div>
     </Layout>

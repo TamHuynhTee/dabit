@@ -8,7 +8,7 @@ const iconProps = {
   stroke: 2,
   size: 24,
   color: '#FF3737',
-  className: 'cursor-pointer',
+  className: 'cursor-pointer hover:scale-110',
 };
 
 const FavoriteButton = (props) => {

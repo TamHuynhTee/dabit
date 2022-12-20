@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import CartPage from '~/components/pages/cartPage';
-import { getCategories } from '~/services/request';
+import { COOKIE_KEYS } from '~/constants/cookie.constants';
+import { calculateCartBill, getCategories } from '~/services/request';
 
 export default function Cart(props) {
   return <CartPage {...props} />;
@@ -8,19 +9,20 @@ export default function Cart(props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const { query } = context;
+    const { req } = context;
     const categories = await getCategories();
-    //   const productInfo = await API.get<ReturnResponse<any>>({
-    //     url: API_URL.CATEGORY_READ,
-    //     params: { ...query },
-    //   });
+    const token = req.cookies[COOKIE_KEYS.ACCESS_TOKEN];
+    let cart: any;
+    if (token) cart = await calculateCartBill({ token });
 
     const data = await Promise.all([categories]);
+
+    const cartData = cart ? { userCartData: cart?.data } : {};
 
     return {
       props: {
         categories: data?.[0]?.data,
-        //   cateInfo: data?.[1]?.data,
+        ...cartData,
       },
     };
   } catch (error) {

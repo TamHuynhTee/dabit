@@ -63,7 +63,7 @@ interface requestCredentials {
   headers?: Record<string, any>;
 }
 
-export const getAuthHeader = (outsideToken: string) => {
+export const getAuthHeader = (outsideToken?: string) => {
   let _token = outsideToken;
   if (!_token) {
     _token = getCookie(COOKIE_KEYS.ACCESS_TOKEN);

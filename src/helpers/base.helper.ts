@@ -13,7 +13,7 @@ export const saveToLocalStorage = (key: string, value: any) => {
   window.localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const getFromLocalStorage = (key: string): any => {
+export const getFromLocalStorage = <T>(key: string): T => {
   if (typeof window === 'undefined') return;
   const value = window.localStorage.getItem(key);
   if (!value) return null;

@@ -6,3 +6,13 @@ export const addProductToCart = ({ idProduct, total = 1 }) => {
     });
   };
 };
+
+export const loadCard = ({ cart, total = 1 }) => {
+  return async ({ setState, getState }) => {
+    // const { products } = getState();
+    setState({
+      products: [...cart],
+      count: total,
+    });
+  };
+};

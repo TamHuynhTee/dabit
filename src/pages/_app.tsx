@@ -9,7 +9,7 @@ import 'slick-carousel/slick/slick.css';
 import 'tailwindcss/tailwind.css';
 import { Provider, useDispatch } from 'react-redux';
 import { requestProfile } from '~/stores/auth/authSaga';
-import store from '~/stores';
+import { store } from '~/stores';
 import AuthSync from '~/middlewares/authSync.middleware';
 
 function App({ Component, ...rest }: AppProps) {
