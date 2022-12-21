@@ -1,8 +1,7 @@
 import { IconHeart } from '@tabler/icons';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import useFavorite from '~/hooks/useFavorite';
-import { selectAuthState } from '~/stores/auth/authSlice';
+import useAuth from '~/stores/auth';
 
 const iconProps = {
   stroke: 2,
@@ -13,11 +12,11 @@ const iconProps = {
 
 const FavoriteButton = (props) => {
   const { handleCreateFavorite, isFavoriteProduct } = useFavorite();
-  const isAuthenticated = useSelector(selectAuthState);
+  const [{ signedIn }] = useAuth();
   const productId = props?.productId || '';
   const containerClass = props?.containerClass || 'favorite';
 
-  if (!isAuthenticated) return <></>;
+  if (!signedIn) return <></>;
 
   return (
     <div

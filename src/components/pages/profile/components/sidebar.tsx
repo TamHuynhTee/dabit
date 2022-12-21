@@ -9,10 +9,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
 import { COOKIE_KEYS } from '~/constants/cookie.constants';
 import { getCookie } from '~/helpers/cookie.helper';
-import { requestLogout } from '~/stores/auth/authSaga';
+import useAuth from '~/stores/auth';
 
 type Icons = 'home' | 'history' | 'profile';
 
@@ -59,14 +58,13 @@ const Sidebar = () => {
     [router.asPath]
   );
 
-  const dispatch = useDispatch();
+  const [, { logout }] = useAuth();
 
   const handleLogout = async () => {
     try {
       const refreshToken = getCookie(COOKIE_KEYS.REFRESH_TOKEN);
       if (!refreshToken) throw new Error();
-
-      dispatch(requestLogout(refreshToken));
+      logout(refreshToken);
     } catch (error) {
       toast.error('REFRESH TOKEN NOT FOUND');
     }

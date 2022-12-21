@@ -1,14 +1,13 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import ErrorText from '~/components/common/errorText';
 import { MODAL_KEYS } from '~/constants/modal.constants';
 import { PHONE_REGEX } from '~/constants/regex.constants';
 import { openModalOrDrawer } from '~/helpers/modal.helper';
 import Layout from '~/layouts/Layout';
-import { selectAuthState } from '~/stores/auth/authSlice';
+import useAuth from '~/stores/auth';
 
 type Props = {};
 
@@ -29,7 +28,7 @@ const CheckOrderPage = (props: any) => {
 };
 
 const CheckOrderForm = () => {
-  const isSignedIn = useSelector(selectAuthState).signedIn;
+  const [{ signedIn }] = useAuth();
 
   return (
     <div className="my-[30px] px-[150px]">
@@ -37,7 +36,7 @@ const CheckOrderForm = () => {
         Kiểm tra thông tin đơn hàng <br /> và tình trạng vận chuyển
       </p>
       <div className="flex justify-center">
-        {isSignedIn ? <></> : <FormCheckOrder />}
+        {signedIn ? <></> : <FormCheckOrder />}
       </div>
     </div>
   );

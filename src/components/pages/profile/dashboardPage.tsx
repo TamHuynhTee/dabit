@@ -1,11 +1,10 @@
 import { IconBusinessplan, IconCalendarPlus, IconReceipt } from '@tabler/icons';
 import Head from 'next/head';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { formatCurrency2 } from '~/helpers/base.helper';
 import { DateJS } from '~/helpers/date.helper';
 import Layout from '~/layouts/Layout';
-import { selectAuthState } from '~/stores/auth/authSlice';
+import useAuth from '~/stores/auth';
 import ProfilePageFrame from './components/profilePageFrame';
 
 const iconsProps = {
@@ -15,9 +14,9 @@ const iconsProps = {
 };
 
 const DashboardPage = (props) => {
-  const authState = useSelector(selectAuthState);
+  const [{ userInfo }] = useAuth();
 
-  const profile = authState.userInfo;
+  const profile = userInfo;
 
   return (
     <>

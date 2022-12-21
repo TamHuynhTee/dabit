@@ -1,12 +1,16 @@
-import { useSelector } from 'react-redux';
 import API, { getAuthHeader } from '~/services/axiosClient';
-import { selectAuthState } from '~/stores/auth/authSlice';
+import useAuth from '~/stores/auth';
 import useCart from '~/stores/cart';
 
+type AddToCartPayload = {
+  _id: string;
+  color: string;
+  quantity: number;
+};
+
 const useCartHook = () => {
-  const authState = useSelector(selectAuthState);
-  const signedIn = authState.signedIn;
-  const [{ count }, { addProductToCart }] = useCart();
+  const [{ signedIn }] = useAuth();
+  const [{ count }, actionCart] = useCart();
 
   const calculateCartBill = async () => {
     if (signedIn) {
@@ -26,11 +30,24 @@ const useCartHook = () => {
     }
   };
 
-  const addToCart = async () => {};
+  const addToCart = async (payload: AddToCartPayload) => {
+    if (signedIn) {
+      await API.post({
+        url: '/api/users/pushCart',
+        headers: { ...getAuthHeader() },
+        body: { ...payload },
+      });
+
+      return;
+    }
+    console.log('go here');
+    actionCart.addProductToCartLocal(payload);
+  };
 
   return {
     calculateCartBill,
     cartCount: count,
+    addToCart,
   };
 };
 

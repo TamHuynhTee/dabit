@@ -14,6 +14,8 @@ const ProductCard = (props: any) => {
     sale: salePercent = 0,
     price = 0,
     total_rate = 0,
+    image_url,
+    colors = [],
   } = props;
 
   const newPrice = React.useMemo(
@@ -21,19 +23,34 @@ const ProductCard = (props: any) => {
     []
   );
 
+  const thumbnail =
+    image_url || colors?.[0]?.image_url || '/assets/images/img_no_image.jpg';
+
   return (
     <div className={styles.product_card}>
       <Link href={productURL(_id)}>
         <a className="">
-          <div className="w-full min-h-[200px] max-h-[250px] mb-3">
+          <span className="w-full h-[250px] mb-3 block">
             <img
-              src="/assets/images/product/photo_2022-09-28_21-58-51.jpg"
+              src={thumbnail}
               className="w-full h-full object-cover"
               alt=""
             />
-          </div>
+            <span className="absolute right-[-3px] top-[15px] w-[80px]">
+              <img
+                src={'/assets/icons/ic_discount.png'}
+                className="w-full h-full"
+                alt=""
+              />
+              {salePercent && (
+                <span className="absolute text-xs top-1/2 left-0 -translate-y-1/2 text-white w-full text-center">
+                  Giảm {salePercent}%
+                </span>
+              )}
+            </span>
+          </span>
           <h3 className={styles.product_name}>{name || '<Chưa cập nhật>'}</h3>
-          <div className={styles.box_price}>
+          <span className={styles.box_price}>
             <span className={styles.product__price}>
               {formatCurrency2(newPrice)}
             </span>
@@ -42,7 +59,7 @@ const ProductCard = (props: any) => {
                 {formatCurrency2(price)}
               </span>
             )}
-          </div>
+          </span>
         </a>
       </Link>
       <StarRating total_rate={total_rate} />

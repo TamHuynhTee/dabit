@@ -1,19 +1,16 @@
 import React from 'react';
-import { getCookie } from '~/helpers/cookie.helper';
-import { setFavorites } from '~/stores/auth/authSaga';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectAuthState } from '~/stores/auth/authSlice';
 import { COOKIE_KEYS } from '~/constants/cookie.constants';
+import { getCookie } from '~/helpers/cookie.helper';
+import useAuth from '~/stores/auth';
 
 const useFavorite = () => {
-  const profileInfo = useSelector(selectAuthState)?.userInfo;
-  const dispatch = useDispatch();
+  const [{ userInfo }, { setFavoriteProducts }] = useAuth();
 
   const isFavoriteProduct = React.useCallback(
     (id: string) => {
       return false; // !!profileInfo?.favoriteWines?.[id];
     },
-    [profileInfo]
+    [userInfo]
   );
 
   const handleCreateFavorite = React.useCallback((e, id) => {
@@ -21,7 +18,7 @@ const useFavorite = () => {
     try {
       const access_token = getCookie(COOKIE_KEYS.ACCESS_TOKEN);
       if (!access_token) throw new Error();
-      dispatch(setFavorites(access_token, id));
+      setFavoriteProducts(id);
     } catch (error) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

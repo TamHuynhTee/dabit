@@ -22,10 +22,14 @@ import DrawerContainer from '~/components/common/drawerContainer';
 import DrawerCart from '~/components/drawers/cart';
 import HeaderSearch from './components/headerSearch';
 import ModalRegister from '~/components/modals/registerModal';
-import { useSelector } from 'react-redux';
-import { selectAuthState } from '~/stores/auth/authSlice';
 import { CATEGORY_MODEL } from '~/models/category.model';
-import useCartHook from '~/hooks/useCart';
+import useCartHook from '~/hooks/useCartHook';
+import dynamic from 'next/dynamic';
+import useAuth from '~/stores/auth';
+
+const CartCount = dynamic(() => import('./components/cartCount'), {
+  ssr: false,
+});
 
 type Props = {
   children: React.ReactNode;
@@ -35,10 +39,10 @@ type Props = {
 const Layout = (props: Props) => {
   const { children, categories = [] } = props;
 
-  const authState = useSelector(selectAuthState);
+  const [{ signedIn, userInfo }] = useAuth();
   const { cartCount } = useCartHook();
-  const isLoggedIn = authState.signedIn;
-  const profile = authState?.userInfo;
+  const isLoggedIn = signedIn;
+  const profile = userInfo;
 
   return (
     <React.Fragment>
@@ -136,7 +140,7 @@ const Layout = (props: Props) => {
                     justifyContent="center"
                     className="col-span-1"
                   >
-                    <Link href={'#!'}>
+                    <Link href={`/tai-khoan/lich-su-mua-hang`}>
                       <a title="Lịch sử mua hàng">
                         <IconHistory
                           size={24}
@@ -161,11 +165,7 @@ const Layout = (props: Props) => {
                         strokeWidth={2}
                         className={`${styles.cart_icon}`}
                       />
-                      {cartCount > 0 && (
-                        <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-xs bg-error rounded-full text-white">
-                          {cartCount}
-                        </span>
-                      )}
+                      {cartCount > 0 && <CartCount count={cartCount} />}
                     </button>
                   </Flex>
                 </div>

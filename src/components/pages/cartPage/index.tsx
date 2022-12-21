@@ -58,7 +58,11 @@ const CartSection = (props) => {
             <CartItem key={index} {...item} />
           ))}
         </div>
-        <div className="col-span-1 h-full bg-gray_F1 rounded-lg"></div>
+        <div className="col-span-1 h-full bg-gray_F1 rounded-lg">
+          <Link href={'/thanh-toan'}>
+            <a className="">Thanh toán</a>
+          </Link>
+        </div>
       </div>
     </div>
   );

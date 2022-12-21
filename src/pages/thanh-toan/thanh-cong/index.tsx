@@ -7,7 +7,7 @@ const TransactionSuccess = (props: Props) => {
   const router = useRouter();
 
   const handleSubmit = () => {
-    router.push('/'); 
+    router.push('/');
   };
 
   return (
@@ -18,10 +18,10 @@ const TransactionSuccess = (props: Props) => {
           <div className={style.transactionHeaderRight}></div>
         </div>
         <div className={style.transactionBody}>
-          <p>Your Payment is Successfull</p>
-          <p>THANK YOU</p>
+          <p>Thanh toán của bạn đã thành công</p>
+          <p>XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH ĐÃ MUA HÀNG TẠI DABIT</p>
           <button className={style.btnTransaction} onClick={handleSubmit}>
-            Back to home
+            Trở về trang chủ
           </button>
         </div>
       </div>

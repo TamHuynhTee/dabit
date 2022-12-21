@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
 
     const data = await Promise.all([categories, productInfo]);
-    console.log(`file: [slug].tsx:25 => data`, data);
+    // console.log(`file: [slug].tsx:25 => data`, data);
 
     return {
       props: {

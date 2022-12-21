@@ -1,12 +1,11 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { requestProfile } from '~/stores/auth/authSaga';
+import useAuth from '~/stores/auth';
 
 export default function AuthSync({ children }: any) {
-  const dispatch = useDispatch();
+  const [, { requestProfile }] = useAuth();
 
   React.useEffect(() => {
-    dispatch(requestProfile());
+    requestProfile();
   }, []);
 
   return children;
