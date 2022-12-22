@@ -38,10 +38,10 @@ type Props = {
 
 const Layout = (props: Props) => {
   const { children, categories = [] } = props;
-
   const [{ signedIn, userInfo }] = useAuth();
-  const { cartCount } = useCartHook();
   const isLoggedIn = signedIn;
+
+  const { cartCount } = useCartHook();
   const profile = userInfo;
 
   return (

@@ -1,0 +1,477 @@
+import { useRouter } from 'next/router';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import ErrorText from '~/components/common/errorText';
+import { API_URL } from '~/constants/api.constant';
+import { LOCAL_STORAGE_KEY } from '~/constants/localStorage.constants';
+import { PHONE_REGEX } from '~/constants/regex.constants';
+import { formatCurrency2, getFromLocalStorage } from '~/helpers/base.helper';
+import useCartHook from '~/hooks/useCartHook';
+import Layout from '~/layouts/Layout';
+import API, { getAuthHeader } from '~/services/axiosClient';
+import { calculateCartBill } from '~/services/request';
+import useAuth from '~/stores/auth';
+import PickLocation from './components/pickLocation';
+
+//      cart**: object[] - [{product: string, color: string, quantity: number}] - product = product._id
+//      address**: object - {province: string, district: string, address: string}
+//      discountCode: string
+//      cod**: boolean
+//      phone**: string
+//      name: string
+//      email:string
+
+// Calc bill nhap ma giam gia, thay doi tinh || quan huyen
+
+const CheckoutPage = (props) => {
+  const { userCartData } = props;
+  const [cart, setCart] = React.useState([]);
+  const [checkout, setCheckout] = React.useState<any>();
+  const shippingFee = checkout?.ship || 0;
+  const { clearCart, cartCount } = useCartHook();
+  const [{ userInfo }] = useAuth();
+
+  const {
+    register,
+    formState: { errors },
+    setValue,
+    handleSubmit,
+  } = useForm({
+    defaultValues: userInfo
+      ? {
+          name: userInfo?.name,
+          email: userInfo?.email,
+          phone: userInfo?.phone,
+          address: '',
+          note: '',
+          payment: 'cod',
+          discountCode: '',
+        }
+      : {},
+  });
+
+  React.useEffect(() => {
+    if (cartCount === 0) router.back();
+  }, []);
+
+  React.useEffect(() => {
+    if (userInfo) {
+      setValue('name', userInfo.name);
+      setValue('email', userInfo.email);
+      setValue('phone', userInfo.phone);
+      setValue('address', '');
+      setValue('note', '');
+      setValue('payment', 'cod');
+      setValue('discountCode', '');
+    }
+  }, [userInfo]);
+
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (userCartData) {
+      const { cart_details, address, ...checkout } = userCartData;
+      setCart(cart_details || []);
+      setCheckout(checkout);
+      return;
+    }
+    // user not login
+    const localCart =
+      getFromLocalStorage<Array<any>>(LOCAL_STORAGE_KEY.CART_PRODUCT_KEY) || [];
+    if (localCart && localCart?.length > 0) {
+      calculateCartBill({
+        payload: {
+          cart: localCart,
+          address: {
+            province: '',
+            district: '',
+            address: '',
+          },
+          discountCode: '',
+        },
+      }).then((res) => {
+        const { cart_details, address, ...checkout } = res.data;
+        setCart(cart_details || []);
+        setCheckout(checkout);
+      });
+    }
+  }, []);
+
+  const totalBill = checkout?.total || 0;
+
+  const handleCheckout = async (data, e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        cart: cart.map((e) => ({
+          product: e.product,
+          quantity: e.quantity,
+          color: e.color,
+        })),
+        address: {
+          province: data.province,
+          district: data.district,
+          address: data.address,
+        },
+        cod: data.payment === 'cod',
+        phone: data.phone,
+        name: data.name,
+        email: data.email,
+        discountCode: data.discountCode,
+      };
+
+      const result = await API.post<any>({
+        url: API_URL.CREATE_BILL,
+        headers: getAuthHeader(),
+        body: { ...payload },
+      });
+
+      console.log(`file: index.tsx:94 => result`, result);
+      if (result?.status === 200 && data.payment === 'cod')
+        router.push('/thanh-toan/thanh-cong');
+      if (result?.data && data.payment === 'vnpay')
+        window.location.href = result?.data;
+
+      clearCart();
+    } catch (error) {
+      toast.error('Có lỗi thanh toán');
+      console.log('err,', error);
+    }
+
+    // router.push('/thanh-toan/thanh-cong');
+  };
+
+  return (
+    <Layout categories={props?.categories || []}>
+      <form
+        onSubmit={handleSubmit(handleCheckout)}
+        className="px-[115px] py-[40px]"
+      >
+        <div className="container flex justify-between items-center gap-[25px] mb-[80px]">
+          <div className="left flex-1 self-start">
+            <h2 className="font-medium mb-[40px] text-[24px]">
+              Chi tiết đơn hàng
+            </h2>
+            {/* USER FORM */}
+            <div className="mb-[30px] relative">
+              <label
+                htmlFor="name"
+                className="text-[14px] px-[10px] absolute pointer-events-none top-[-13px] left-[20px] bg-white text-text_input"
+              >
+                Họ tên <span className="text-red">*</span>
+              </label>
+              <input
+                {...register('name', {
+                  required: {
+                    value: true,
+                    message: 'Vui lòng nhập họ tên nhận hàng',
+                  },
+                })}
+                id="name"
+                type="text"
+                placeholder="Nhập họ tên"
+                className="px-[30px] h-[60px] rounded-[6px] border border-gray_D9 w-full outline-none"
+              />
+              {errors?.['name'] && <ErrorText text={errors['name'].message} />}
+            </div>
+
+            <div className="mb-[30px] relative">
+              <label
+                htmlFor="email"
+                className="text-[14px] px-[10px] absolute pointer-events-none top-[-13px] left-[20px] bg-white text-text_input"
+              >
+                Email <span className="text-red">*</span>
+              </label>
+              <input
+                {...register('email', {
+                  required: {
+                    value: true,
+                    message: 'Vui lòng nhập email',
+                  },
+                })}
+                id="email"
+                type="text"
+                placeholder="Nhập email nhận hóa đơn"
+                className="px-[30px] h-[60px] rounded-[6px] border border-gray_D9 w-full outline-none"
+              />
+              {errors?.['email'] && (
+                <ErrorText text={errors['email'].message} />
+              )}
+            </div>
+
+            <div className="mb-[30px] relative">
+              <label
+                htmlFor="phone"
+                className="text-[14px] px-[10px] absolute pointer-events-none top-[-13px] left-[20px] bg-white text-text_input"
+              >
+                Số điện thoại <span className="text-red">*</span>
+              </label>
+              <input
+                {...register('phone', {
+                  required: {
+                    value: true,
+                    message: 'Vui lòng nhập họ tên nhận hàng',
+                  },
+                  pattern: {
+                    value: PHONE_REGEX,
+                    message: 'Số điện thoại không đúng định dạng',
+                  },
+                })}
+                id="phone"
+                type="text"
+                placeholder="Nhập số điện thoại nhận hàng"
+                className="px-[30px] h-[60px] rounded-[6px] border border-gray_D9 w-full outline-none"
+              />
+              {errors?.['phone'] && (
+                <ErrorText text={errors['phone'].message} />
+              )}
+            </div>
+
+            <div className="mb-[20px] flex items-center gap-x-2">
+              <span className="text-gray_68 text-[20px] font-medium">
+                Địa chỉ
+              </span>
+              <div className="flex-grow h-[1px] bg-gray_D9"></div>
+            </div>
+
+            <PickLocation setValue={setValue} errors={errors} />
+
+            <div className="mb-[30px] relative">
+              <label
+                htmlFor="address"
+                className="text-[14px] px-[10px] absolute pointer-events-none top-[-13px] left-[20px] bg-white text-text_input"
+              >
+                Địa chỉ cụ thể <span className="text-red">*</span>
+              </label>
+              <input
+                {...register('address', {
+                  required: {
+                    value: true,
+                    message: 'Vui lòng nhập địa chỉ giao hàng',
+                  },
+                })}
+                id="address"
+                type="text"
+                placeholder="VD: <Số nhà>, <Tên đường>, ..."
+                className="px-[30px] h-[60px] rounded-[6px] border border-gray_D9 w-full outline-none"
+              />
+              {errors?.['address'] && (
+                <ErrorText text={errors['address'].message} />
+              )}
+            </div>
+
+            <div className="mb-[30px] relative">
+              <label
+                htmlFor="note"
+                className="text-[14px] px-[10px] absolute pointer-events-none top-[-13px] left-[20px] bg-white text-text_input"
+              >
+                Ghi chú
+              </label>
+              <textarea
+                {...register('note')}
+                id="note"
+                placeholder="Nhập ghi chú"
+                rows={5}
+                className="px-[30px] pt-2 rounded-[6px] border border-gray_D9 w-full outline-none"
+              ></textarea>
+            </div>
+
+            {/* // USER FORM */}
+          </div>
+          <div className="right flex-1 p-[40px] rounded-[6px] bg-checkout_bg">
+            <h2 className="mb-[20px] text-[20px] font-medium">Đơn của bạn</h2>
+            <div className="container rounded-[6px] mb-[30px] p-[30px] bg-white">
+              <div className="flex items-center justify-between py-[15px] border-b-[1px] border-b-gray_D9">
+                <span className="text-[20px] font-medium">Sản phẩm</span>
+                <span className="text-[20px] font-medium">Tạm tính</span>
+              </div>
+
+              {cart.map((item: any, index: number) => {
+                const totalPrice = (item?.quantity || 0) * item?.price;
+                return (
+                  <div className="border-b-[1px] border-b-gray_D9" key={index}>
+                    <div className="flex items-start justify-between pt-[15px]">
+                      <span className="text-[18px]">
+                        {item.name} ({item?.color})
+                      </span>
+                      <span className="text-[18px]">
+                        {formatCurrency2(totalPrice)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-x-3 pb-[15px]">
+                      <span className="text-[14px] italic">
+                        {formatCurrency2(item?.price || 0)}
+                      </span>
+                      <span className="text-[14px]">x {item?.quantity}</span>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div className="flex items-center justify-between py-[15px] border-b-[2px] border-b-gray_D9">
+                <span className="text-[18px]">Tổng tạm tính</span>
+                <span className="text-[18px]">
+                  {formatCurrency2(totalBill)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between py-[15px] border-b-[2px] border-b-gray_D9">
+                <div className="w-full">
+                  <span className="inline-block text-[18px] mb-[10px] ">
+                    Phương thức giao hàng
+                  </span>
+                  <div className="input-gr">
+                    <div className="flex items-center w-full">
+                      <input
+                        // {...register('shippingMethod')}
+                        defaultChecked
+                        id="GHTK"
+                        type="radio"
+                        name="shippingMethod"
+                        value={shippingFee}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <label
+                        htmlFor="GHTK"
+                        className="ml-2 text-[16px] text-text_input flex flex-grow justify-between items-center"
+                      >
+                        Giao hàng tiết kiệm
+                        <span className="text-[14px]">
+                          {formatCurrency2(shippingFee)}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between py-[15px]">
+                <span className="text-[20px] font-medium">Tổng thanh toán</span>
+                <span className="text-[20px] font-medium">
+                  {formatCurrency2(totalBill)}
+                </span>
+              </div>
+            </div>
+
+            <div className="mb-[30px] relative">
+              <label
+                htmlFor="discountCode"
+                className="text-[14px] px-[10px] pointer-events-none text-text_input"
+              >
+                Mã giảm giá
+              </label>
+              <input
+                {...register('discountCode')}
+                id="discountCode"
+                type="text"
+                placeholder="Nhập mã"
+                className="px-[30px] h-[60px] rounded-[6px] border border-gray_D9 w-full outline-none"
+              />
+            </div>
+
+            <div className="order wrapper">
+              <label
+                htmlFor="cod"
+                className="block pb-[20px] mb-[20px] border-b-[1px] border-b-gray_D9"
+              >
+                <div className="flex items-center mb-[20px]">
+                  <input
+                    defaultChecked
+                    id="cod"
+                    value={'cod'}
+                    type="radio"
+                    {...register('payment')}
+                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div className="ml-2 text-[20px] font-medium">COD</div>
+                </div>
+                <p className="text-[16px] font-[400] text-text_input pl-[28px]">
+                  Trả tiền khi nhận hàng.
+                </p>
+              </label>
+
+              <label
+                htmlFor="vnpay"
+                className="block pb-[20px] mb-[20px] border-b-[1px] border-b-gray_D9"
+              >
+                <div className="flex justify-between mb-[20px]">
+                  <div className="flex items-center">
+                    <input
+                      id="vnpay"
+                      value={'vnpay'}
+                      type="radio"
+                      {...register('payment')}
+                      className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <div className="ml-2 text-[20px] font-medium">VNPAY</div>
+                  </div>
+                  <img
+                    src="/assets/icons/ic_vnpay.png"
+                    alt=""
+                    className="w-[100px] h-[25px] object-cover"
+                  />
+                </div>
+
+                <p className="text-[16px] font-[400] text-text_input pl-[28px]">
+                  Thanh toán online qua VNPAY.
+                </p>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="text-white bg-blue_00 w-full py-[16px] px-[38px] rounded-[6px] text-[20px] font-medium"
+            >
+              Tiến hành thanh toán
+            </button>
+          </div>
+        </div>
+
+        <div className="containter flex border-b-[1px] border-b-gray_D9 justify-between gap-[80px]">
+          <div className="service1 flex items-center mb-[30px] flex-1">
+            <div className="icon mt-[6px] mr-[20px] max-w-[45px]">
+              <img src="/assets/icons/service1.png" alt="" />
+            </div>
+            <div className="content flex flex-col gap-[7px]">
+              <h6 className="font-[700]">Giao hàng an toàn</h6>
+              <p className="text-text_input">Giao tận nơi, tận tay.</p>
+            </div>
+          </div>
+
+          <div className="service1 flex items-center  mb-[30px] flex-1">
+            <div className="icon mt-[6px] mr-[20px] max-w-[45px]">
+              <img src="/assets/icons/service2.png" alt="" />
+            </div>
+            <div className="content flex flex-col gap-[7px]">
+              <h6 className="font-[700]">Giao hàng nhanh</h6>
+              <p className="text-text_input">Trong vòng 10 ngày.</p>
+            </div>
+          </div>
+
+          <div className="service1 flex items-center  mb-[30px] flex-1">
+            <div className="icon mt-[6px] mr-[20px] max-w-[45px]">
+              <img src="/assets/icons/service3.png" alt="" />
+            </div>
+            <div className="content flex flex-col gap-[7px]">
+              <h6 className="font-[700]">Đổi trả tiện lợi</h6>
+              <p className="text-text_input">Trong vòng 7 ngày.</p>
+            </div>
+          </div>
+
+          <div className="service1 flex items-center  mb-[30px] flex-1">
+            <div className="icon mt-[6px] mr-[20px] max-w-[45px]">
+              <img src="/assets/icons/service4.png" alt="" />
+            </div>
+            <div className="content flex flex-col gap-[7px]">
+              <h6 className="font-[700]">Hỗ trợ nhanh chóng</h6>
+              <p className="text-text_input">Hỗ trợ trực tuyến 24/7.</p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </Layout>
+  );
+};
+
+export default CheckoutPage;

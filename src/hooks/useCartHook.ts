@@ -1,16 +1,11 @@
+import { LocalCartPayload } from '~/interfaces/cart.interface';
 import API, { getAuthHeader } from '~/services/axiosClient';
 import useAuth from '~/stores/auth';
 import useCart from '~/stores/cart';
 
-type AddToCartPayload = {
-  _id: string;
-  color: string;
-  quantity: number;
-};
-
 const useCartHook = () => {
   const [{ signedIn }] = useAuth();
-  const [{ count }, actionCart] = useCart();
+  const [{ count, products }, actionCart] = useCart();
 
   const calculateCartBill = async () => {
     if (signedIn) {
@@ -30,24 +25,45 @@ const useCartHook = () => {
     }
   };
 
-  const addToCart = async (payload: AddToCartPayload) => {
+  const addToCart = (payload: LocalCartPayload) => {
     if (signedIn) {
-      await API.post({
-        url: '/api/users/pushCart',
-        headers: { ...getAuthHeader() },
-        body: { ...payload },
-      });
-
+      actionCart.addProductToCartAuth(payload);
       return;
     }
-    console.log('go here');
     actionCart.addProductToCartLocal(payload);
+  };
+
+  const changeItemQuantity = (payload: LocalCartPayload) => {
+    if (signedIn) {
+      actionCart.changeAuthCartItemQuantity(payload);
+      return;
+    }
+    actionCart.changeLocalCartItemQuantity(payload);
+  };
+
+  const removeCartItem = (product: string) => {
+    if (signedIn) {
+      actionCart.removeAuthCartItem(product);
+      return;
+    }
+
+    actionCart.removeLocalCartItem(product);
+  };
+
+  const clearCart = () => {
+    if (!signedIn) {
+      actionCart.clearCart();
+    }
   };
 
   return {
     calculateCartBill,
     cartCount: count,
+    cartProducts: products,
     addToCart,
+    changeItemQuantity,
+    removeCartItem,
+    clearCart,
   };
 };
 

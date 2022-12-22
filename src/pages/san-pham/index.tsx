@@ -14,15 +14,20 @@ const ProductList = (props: Props) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { query } = context;
+    const category = query?.['category'];
     const categories = await getCategories();
     const cateInfo = await API.get<ReturnResponse<any>>({
       url: API_URL.CATEGORY_READ,
-      params: { ...query },
+      params: {
+        name: category,
+      },
     });
 
     const productList = await API.get<ReturnResponse<any>>({
       url: API_URL.PRODUCT_LIST,
-      // params: { ...query },
+      params: {
+        category,
+      },
     });
 
     const data = await Promise.all([categories, cateInfo, productList]);

@@ -96,7 +96,7 @@ const PickLocation = (props) => {
   //   });
 
   const onChangeProvince = (selected) => {
-    setValue('province', selected?.value);
+    setValue('province', selected?.label);
     setValue('district', '');
     setValue('ward', '');
     setDistrict([EmptyDistrict]);
@@ -106,7 +106,7 @@ const PickLocation = (props) => {
   };
 
   const onChangeDistrict = (selected) => {
-    setValue('district', selected?.value);
+    setValue('district', selected?.label);
     // setWard([EmptyWard]);
     // loadWardData_V2(selected?.value);
   };
@@ -155,8 +155,8 @@ const PickLocation = (props) => {
           styles={colorStyles}
           name={'district'}
         />
-        {errors?.['province'] && (
-          <ErrorText text={errors['province'].message} />
+        {errors?.['district'] && (
+          <ErrorText text={errors['district'].message} />
         )}
       </div>
       {/* <div className="mb-[30px] relative">

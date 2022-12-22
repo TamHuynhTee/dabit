@@ -21,10 +21,10 @@ type Props = {
 const AllCatePanel = ({ categories = [] }: Props) => {
   const [cate, setCate] = React.useState<CATEGORY_MODEL>(undefined);
 
-  const renderSubMenu = (length: number, id: string) => {
+  const renderSubMenu = (length: number, name: string) => {
     return (
       <Flex className={`col-span-1 items-center justify-center`}>
-        <Link href={categoryURL(id)}>
+        <Link href={categoryURL(name)}>
           <a className="flex items-center gap-1 !text-[#0000ee]">
             Xem tất cả{' '}
             <IconArrowNarrowRight size={20} color={'#0000ee'} stroke={2} />
@@ -118,7 +118,7 @@ const AllCatePanel = ({ categories = [] }: Props) => {
             <div className="grid grid-cols-5 gap-5 h-full">
               {cate.image_url ? (
                 <>
-                  {renderSubMenu(subCateLengthWithBanner, cate?._id)}
+                  {renderSubMenu(subCateLengthWithBanner, cate?.name)}
                   <div className="col-span-2">
                     <ImageRender
                       src={cate.image_url}
@@ -128,7 +128,7 @@ const AllCatePanel = ({ categories = [] }: Props) => {
                   </div>
                 </>
               ) : (
-                renderSubMenu(subCateLengthWithoutBanner, cate?._id)
+                renderSubMenu(subCateLengthWithoutBanner, cate?.name)
               )}
             </div>
           ) : (

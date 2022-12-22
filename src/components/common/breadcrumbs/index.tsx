@@ -18,7 +18,7 @@ const BreadcrumbSeparator = () => (
 
 export type BreadcrumbPath = {
   slug: string;
-  name: string;
+  name: React.ReactNode;
 };
 
 type Props = {

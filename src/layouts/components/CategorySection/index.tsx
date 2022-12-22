@@ -57,7 +57,7 @@ const CategorySection = (props: Props) => {
           </div>
           {categories?.map((cate, cateIndex) => (
             <div className="col-span-2" key={cateIndex}>
-              <Link href={categoryURL(cate._id)}>
+              <Link href={categoryURL(cate?.name)}>
                 <a className="h-full">
                   <Flex
                     alignItem="center"

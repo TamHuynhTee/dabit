@@ -1,7 +1,16 @@
 import { createStore, createHook } from 'react-sweet-state';
 import { LOCAL_STORAGE_KEY } from '~/constants/localStorage.constants';
 import { getFromLocalStorage } from '~/helpers/base.helper';
-import { addProductToCartLocal, loadCard } from './cart.action';
+import {
+  loadCart,
+  addProductToCartLocal,
+  changeLocalCartItemQuantity,
+  removeLocalCartItem,
+  addProductToCartAuth,
+  changeAuthCartItemQuantity,
+  removeAuthCartItem,
+  clearCart,
+} from './cart.action';
 
 export type State = {
   products: Array<any>;
@@ -16,8 +25,14 @@ const initialState: State = {
 export const CartStore = createStore({
   initialState,
   actions: {
+    loadCart,
     addProductToCartLocal,
-    loadCard,
+    changeLocalCartItemQuantity,
+    removeLocalCartItem,
+    addProductToCartAuth,
+    changeAuthCartItemQuantity,
+    removeAuthCartItem,
+    clearCart,
   },
   name: 'cart',
 });

@@ -1,5 +1,6 @@
 import { IconMinus, IconPlus, IconShoppingCartPlus } from '@tabler/icons';
 import React from 'react';
+import { toast } from 'react-hot-toast';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
 import FavoriteButton from '~/components/common/favoriteButton';
@@ -7,6 +8,7 @@ import StarRating from '~/components/common/starRating';
 import { formatCurrency2 } from '~/helpers/base.helper';
 import useCartHook from '~/hooks/useCartHook';
 import Layout from '~/layouts/Layout';
+import useAuth from '~/stores/auth';
 import GallerySlider from './components/GallerySlider';
 import Ratings from './components/RatingsSummary';
 import styles from './style.module.css';
@@ -94,9 +96,8 @@ const ProductDetailPage = (props: any) => {
     enable = true,
   } = product;
   const [currentColor, setCurrentColor] = React.useState<any>(colors?.[0]);
-  //   const [isFavorite, setIsFavorite] = React.useState<boolean>(false);
   const [quantity, setQuantity] = React.useState<number>(1);
-
+  //   const [{ signedIn }] = useAuth();
   const { addToCart } = useCartHook();
 
   const newPrice = React.useMemo(
@@ -115,14 +116,31 @@ const ProductDetailPage = (props: any) => {
   const handleAddToCart = () => {
     if (currentColor) {
       addToCart({
-        _id: product?._id,
+        product: product?._id,
         quantity,
         color: currentColor?.color,
       });
+      toast.success('Đã thêm vào giỏ hàng');
     } else {
-      //   toast.error('Không thể mua hàng');
+      toast.error('Không thể mua hàng');
     }
   };
+
+  const handleGoToCart = () => {
+    if (currentColor) {
+      addToCart({
+        product: product?._id,
+        quantity,
+        color: currentColor?.color,
+      });
+      toast.success('Đã thêm vào giỏ hàng');
+      window.location.href = '/gio-hang';
+    } else {
+      toast.error('Không thể mua hàng');
+    }
+  };
+
+  const disableButton = currentColor?.quantity === 0;
 
   const isComingSoon = React.useMemo(() => {
     const inStock = colors?.reduce((e, v) => e + v?.quantity, 0);
@@ -256,9 +274,15 @@ const ProductDetailPage = (props: any) => {
               )}
               {(!isComingSoon || !enable) && (
                 <>
+                  {disableButton && (
+                    <p className="text-error text-lg col-span-5">
+                      Sản phẩm tạm thời hết hàng!
+                    </p>
+                  )}
                   <button
-                    className="col-span-3 border-2 border-yellow_E3 bg-yellow_E3 rounded-lg w-full p-[5px] flex flex-col items-center"
-                    onClick={() => {}}
+                    className="col-span-3 border-2 border-yellow_E3 disabled:bg-gray_68 disabled:select-none disabled:border-gray_68 bg-yellow_E3 rounded-lg w-full p-[5px] flex flex-col items-center"
+                    disabled={disableButton}
+                    onClick={handleGoToCart}
                   >
                     <span className="font-bold text-base text-white">
                       MUA NGAY
@@ -268,7 +292,8 @@ const ProductDetailPage = (props: any) => {
                     </span>
                   </button>
                   <button
-                    className="col-span-2 border-2 border-yellow_E3 rounded-lg w-full p-[5px] flex flex-col items-center"
+                    className="col-span-2 border-2 border-yellow_E3 disabled:border-gray_68 rounded-lg w-full p-[5px] flex flex-col items-center"
+                    disabled={disableButton}
                     onClick={handleAddToCart}
                   >
                     <IconShoppingCartPlus
@@ -283,9 +308,9 @@ const ProductDetailPage = (props: any) => {
                   </button>
                 </>
               )}
-              <div className="col-span-1 border-2 border-gray_D9 bg-gray_D9 rounded-lg w-full p-[15px] flex justify-center">
-                <FavoriteButton />
-              </div>
+              <FavoriteButton containerClass="col-span-1 border-2 border-gray_D9 bg-gray_D9 rounded-lg w-full p-[15px] flex justify-center" />
+              {/* <div className="col-span-1 border-2 border-gray_D9 bg-gray_D9 rounded-lg w-full p-[15px] flex justify-center">
+              </div> */}
             </div>
           </div>
         </div>

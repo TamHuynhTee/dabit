@@ -2,10 +2,12 @@ import Link from 'next/link';
 import React from 'react';
 import Divider from '~/components/common/divider';
 import useCartHook from '~/hooks/useCartHook';
+import useAuth from '~/stores/auth';
 
 // type Props = {}
 
 const DrawerCart = () => {
+  //   const [{ signedIn }] = useAuth();
   const { cartCount } = useCartHook();
   return (
     <div className="mt-3">

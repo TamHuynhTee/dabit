@@ -8,6 +8,8 @@ export const API_URL = {
   PRODUCT_LIST: '/api/product/list',
   PRODUCT_READ: '/api/product/read',
   PROVINCE: '/api/location/province',
+  CREATE_BILL: '/api/bill/create',
+  PUSH_CART: '/api/users/pushCart',
   DISTRICT: (proCode: string) => `/api/location/district/${proCode}`,
   WARD: (disCode: string) => `/api/location/ward/${disCode}`,
 };
