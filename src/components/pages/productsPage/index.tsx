@@ -1,39 +1,28 @@
+import { useRouter } from 'next/router';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import ProductCard from '~/components/common/productCard';
-import { MOBILE_BRANDS } from '~/dumps/brands';
+import { appendToURL } from '~/helpers/base.helper';
 import Layout from '~/layouts/Layout';
-import BrandFilter from './components/brandFilter';
+import { SORT } from '~/pages/san-pham';
 import Filter from './components/filter';
 
-type Props = {};
-
-// Bộ lọc
-
-// field: category, specs, colors, min_price, max_price, skip, limit, sortName, sortType
-// type:
-//      search: string - name, code - undefine = all
-//      category: string
-//      specs: object - {name: string, values: any[]} - undefine = all | or | [{name: string, values: string}]
-//      colors: string - undefine = all - colors: "white;blue"
-//      min_price: number - undefine = 0
-//      max_price: number - undefine = 1000000000
-//      skip: number - undefine = 0
-//      limit: number - undefine = 20
-//      sortName: string - in ["price", "sale", "sold", "total_rate"]
-//      sortType: number - 1 tăng dần, -1 giảm dần
-// rule:
-//      specs hiệu quả khi đi với category,
-//      sortType và sortName hiệu quả khi đi với nhau
-// example
-//      "name": "Laptop",
-//      "specs": {name: "Ram", values:"8gb;16gb"},
-//      "colors": ["Red"],
-//      "max_price": 65000000
-// if skip == undefine => trả về count để phân trang
+// phan trang
 
 const ProductsPage = (props: any) => {
-  const { products, cateInfo } = props;
-  console.log(`file: index.tsx:34 => cateInfo`, cateInfo);
+  const { products, cateInfo, colors } = props;
+  const total = products?.count || 0;
+
+  const router = useRouter();
+
+  const { query } = router;
+
+  const sortName = query?.['sortName'];
+  const sortType = query?.['sortType'];
+
+  const handleSort = ({ sortName, sortType }) => {
+    appendToURL({ router, newQuery: { sortName, sortType } });
+  };
+
   return (
     <Layout categories={props.categories || []}>
       <Breadcrumb
@@ -66,14 +55,38 @@ const ProductsPage = (props: any) => {
         />
       </div>
       {/* Filter */}
-      <Filter brands={MOBILE_BRANDS} />
+      <Filter colors={colors} specs={cateInfo?.specsModel} />
 
-      <div className="my-5"></div>
+      <div className="my-5">
+        <p className="text-gray_B9 font-semibold my-2">Sắp xếp theo</p>
+        <div className="flex items-center flex-wrap gap-3">
+          {SORT.map((e, i) => {
+            const active =
+              sortName && sortType
+                ? sortName == e.sortName && sortType == e.sortType.toString()
+                : i == 0;
 
+            return (
+              <div
+                key={i}
+                className={`p-2 cursor-pointer rounded-xl border border-gray_B9 ${
+                  active
+                    ? 'bg-baseColor'
+                    : 'border-gray_B9 hover:border-gray_68'
+                }`}
+                onClick={() =>
+                  handleSort({ sortName: e.sortName, sortType: e.sortType })
+                }
+              >
+                <span className={`text-gray_68`}>{e.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {products?.data?.length <= 0 && <p>Không có sản phẩm của danh mục này</p>}
       <div className="grid grid-cols-5 gap-x-3 gap-y-3">
-        {products?.data?.length <= 0 && (
-          <p>Không có sản phẩm của danh mục này</p>
-        )}
         {(products?.data || []).map((product, index) => {
           return <ProductCard key={index} {...product} />;
         })}

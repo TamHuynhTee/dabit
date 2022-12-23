@@ -1,23 +1,20 @@
 import { IconChevronDown } from '@tabler/icons';
 import React from 'react';
-import { I_SELECT_OPTION } from '~/interfaces/search.interface';
 import styles from './style.module.css';
 
 type Props = {
   nameFilter: string;
-  keyFilter: string;
   icon?: React.ReactNode;
   showDropdown?: boolean;
-  options?: I_SELECT_OPTION[];
+  dropdownContent?: React.ReactNode;
 };
 
 const FilterDropdown = (props: Props) => {
   const {
     icon = <></>,
     nameFilter,
-    keyFilter,
     showDropdown = false,
-    options = [],
+    dropdownContent,
   } = props;
 
   const dropdownToggleRef = React.useRef<HTMLDivElement>(null);
@@ -48,24 +45,24 @@ const FilterDropdown = (props: Props) => {
     <div className={styles.filterDropdownContainer}>
       <div
         className={[
-          'flex items-center gap-1 p-1 h-full px-2 border-gray_D9 border hover:border-black cursor-pointer rounded-md',
+          'flex items-center gap-1 p-2 h-full px-2 border-gray_D9 border hover:border-black cursor-pointer rounded-md',
           styles.filterDropdownToggle,
         ].join(' ')}
         ref={dropdownToggleRef}
       >
         <span>{icon}</span>
-        <span className="leading-[20px] text-[14px]">{nameFilter}</span>
+        <span className="leading-[24px] text-[18px]">{nameFilter}</span>
         {showDropdown && (
           <span>
-            <IconChevronDown stroke={2} color="#000" size={18} />
+            <IconChevronDown stroke={2} color="#000" size={20} />
           </span>
         )}
       </div>
 
       <div className={`${styles.dropdownLayout}`} ref={dropdownRef}>
         <div className="flex flex-wrap items-center gap-2 z-10">
-          {options.length > 0 ? (
-            options.map((e, i) => <div key={i}></div>)
+          {typeof dropdownContent !== undefined ? (
+            dropdownContent
           ) : (
             <span className="text-center italic font-light text-gray_B9 w-full inline-block">
               Bộ lọc không có sẵn

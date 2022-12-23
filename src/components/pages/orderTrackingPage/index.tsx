@@ -6,6 +6,7 @@ import React from 'react';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
 import { formatCurrency2 } from '~/helpers/base.helper';
+import { ORDER_STATUS } from '~/interfaces/order.interface';
 import Layout from '~/layouts/Layout';
 import OrderStatusProgress from './components/orderStatusProgress';
 
@@ -28,7 +29,7 @@ const OrderTrackingPage = (props: any) => {
           },
         ]}
       />
-      <OrderStatusProgress status={1} />
+      <OrderStatusProgress status={ORDER_STATUS.ORDERED} />
       <div className="grid grid-cols-12 w-full gap-5">
         <div className="col-span-8 border border-gray_C1 rounded-md p-3">
           <div className="flex items-center gap-1">

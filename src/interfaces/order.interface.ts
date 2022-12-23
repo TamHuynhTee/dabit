@@ -1,10 +1,10 @@
 export enum ORDER_STATUS {
-  ORDERED = 0,
-  CONFIRMED = 1,
-  ON_DELIVERY = 2,
-  DELIVERED = 3,
-  CANCELLED = -1,
-  FAILED_DELIVERED = -2,
+  ORDERED = 'Ordered',
+  CONFIRMED = 'Confirmed',
+  ON_DELIVERY = 'Delivering',
+  DELIVERED = 'Done',
+  CANCELLED = 'Canceled',
+  //   FAILED_DELIVERED = -2,
 }
 
 export const ORDER_STATUS_TEXT = {
@@ -13,5 +13,5 @@ export const ORDER_STATUS_TEXT = {
   [ORDER_STATUS.ON_DELIVERY]: 'Đang giao hàng',
   [ORDER_STATUS.DELIVERED]: 'Đã nhận hàng',
   [ORDER_STATUS.CANCELLED]: 'Đã hủy',
-  [ORDER_STATUS.FAILED_DELIVERED]: 'Giao thất bại',
+  //   [ORDER_STATUS.FAILED_DELIVERED]: 'Giao thất bại',
 };

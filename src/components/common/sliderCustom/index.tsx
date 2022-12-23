@@ -6,7 +6,7 @@ interface SliderCustomProps {
   customSettings: Settings;
 }
 
-const SliderCustom = (props: SliderCustomProps) => {
+const SliderCustom = React.forwardRef((props: SliderCustomProps, ref: any) => {
   const settings: Settings = {
     dots: false,
     infinite: true,
@@ -19,7 +19,13 @@ const SliderCustom = (props: SliderCustomProps) => {
   };
   const { children, customSettings } = props;
   const sliderSettings = { ...settings, ...customSettings };
-  return <Slider {...sliderSettings}>{children}</Slider>;
-};
+  return (
+    <Slider ref={(slider) => (ref.current = slider)} {...sliderSettings}>
+      {children}
+    </Slider>
+  );
+});
+
+SliderCustom.displayName = 'SliderCustom';
 
 export default SliderCustom;

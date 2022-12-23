@@ -1,6 +1,6 @@
 import { IconShoppingCartPlus } from '@tabler/icons';
 import Link from 'next/link';
-import { formatCurrency2 } from '~/helpers/base.helper';
+import { calculateSalePrice, formatCurrency2 } from '~/helpers/base.helper';
 import FavoriteButton from '../favoriteButton';
 import React from 'react';
 import styles from './style.module.css';
@@ -18,10 +18,7 @@ const ProductCard = (props: any) => {
     colors = [],
   } = props;
 
-  const newPrice = React.useMemo(
-    () => Math.round(price * (1 - salePercent / 100) * 100) / 100,
-    []
-  );
+  const newPrice = calculateSalePrice(price, salePercent);
 
   const thumbnail =
     image_url || colors?.[0]?.image_url || '/assets/images/img_no_image.jpg';

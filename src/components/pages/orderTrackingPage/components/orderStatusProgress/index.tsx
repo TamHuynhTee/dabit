@@ -88,9 +88,7 @@ const milestones: IStatus[] = [
 
 const getColorByStatus = (status: ORDER_STATUS, active: boolean) => {
   return active
-    ? [ORDER_STATUS.CANCELLED, ORDER_STATUS.FAILED_DELIVERED].some(
-        (e) => e == status
-      )
+    ? [ORDER_STATUS.CANCELLED].some((e) => e == status)
       ? 'border-error bg-error'
       : 'border-green bg-green'
     : 'border-gray_E1';

@@ -6,10 +6,12 @@ export const API_URL = {
   CATEGORY_LIST: '/api/category/list',
   CATEGORY_READ: '/api/category/read',
   PRODUCT_LIST: '/api/product/list',
+  PRODUCT_COLORS: '/api/product/listColor',
   PRODUCT_READ: '/api/product/read',
   PROVINCE: '/api/location/province',
   CREATE_BILL: '/api/bill/create',
   PUSH_CART: '/api/users/pushCart',
+  BILL_LIST: '/api/bill/list',
   DISTRICT: (proCode: string) => `/api/location/district/${proCode}`,
   WARD: (disCode: string) => `/api/location/ward/${disCode}`,
 };

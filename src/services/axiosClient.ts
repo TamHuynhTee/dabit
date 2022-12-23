@@ -34,6 +34,7 @@ axiosClient.interceptors.response.use(
     return res;
   },
   (err) => {
+    // console.log(`file: axiosClient.ts:37 => err`, err);
     if (err.response && err.response.data) return err.response.data;
     return Promise.reject(err);
   }

@@ -54,16 +54,16 @@ const Layout = (props: Props) => {
               className="gap-3 justify-end container mx-auto py-[5px] px-[20px]"
             >
               <ContactLink
-                href="tel: 0347933844"
+                href="tel: 0865393872"
                 icon={<IconPhone size={16} strokeWidth={2} color={'black'} />}
-                content="0347 933 xxx"
+                content="0865 393 872"
               />
               <ContactLink
-                href="mailto: huynhthanhtam2605@gmail.com"
+                href="mailto: 18110094@student.hcmute.edu.vn"
                 icon={
                   <IconMailForward size={16} strokeWidth={2} color={'black'} />
                 }
-                content="xxx@gmail.com"
+                content="18110094@student.hcmute.edu.vn"
               />
             </Flex>
           </div>
