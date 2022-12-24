@@ -2,9 +2,11 @@ import { IconChecklist, IconWallet } from '@tabler/icons';
 import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
+import { batch } from 'react-sweet-state';
 import { ORDER_STATUS_FILTER } from '~/constants/order.constants';
 import { formatCurrency2 } from '~/helpers/base.helper';
-import { ORDER_STATUS_TEXT } from '~/interfaces/order.interface';
+import useLoading from '~/hooks/useLoading';
+import { ORDER_STATUS, ORDER_STATUS_TEXT } from '~/interfaces/order.interface';
 import Layout from '~/layouts/Layout';
 import ProfilePageFrame from './components/profilePageFrame';
 
@@ -14,11 +16,35 @@ const iconsProps = {
   className: 'text-gray_B9',
 };
 
-const filterStatus = [{ label: 'Tất cả', value: '' }, ...ORDER_STATUS_FILTER];
+const filterStatus = [
+  { label: 'Tất cả', value: 'All' },
+  ...ORDER_STATUS_FILTER,
+];
 
 const ProfileInfoPage = (props: any) => {
   const { bills } = props;
-  const { data = [], count = 0, total = 0 } = bills;
+  const { All = { bills: [] } } = bills;
+
+  console.log(`file: checkoutHistoryPage.tsx:28 => bills`, bills);
+  const [statusBills, setStatusBills] = React.useState(All);
+  const [currStatus, setCurrStatus] = React.useState<number | string>(
+    filterStatus[0].value
+  );
+
+  const { loading, showUILoading } = useLoading();
+
+  const total = statusBills?.length || 0;
+
+  const totalBills = All?.length || 0;
+  const totalPayment = React.useMemo(
+    () =>
+      (All || []).reduce((prev, curr) => {
+        return curr?.status?.[0]?.statusTimeline === ORDER_STATUS.ORDERED
+          ? prev + curr?.total
+          : prev;
+      }, 0),
+    []
+  );
 
   return (
     <>
@@ -36,19 +62,25 @@ const ProfileInfoPage = (props: any) => {
               <div className="flex items-center justify-center gap-x-12">
                 <div className="flex flex-col items-center gap-y-2">
                   <IconChecklist {...iconsProps} />
-                  <p className="font-semibold">{count} đơn hàng</p>
+                  <p className="font-semibold">{totalBills} đơn hàng</p>
                 </div>
                 <div className="flex flex-col items-center gap-y-2">
                   <IconWallet {...iconsProps} />
                   <p className="font-semibold">
-                    Đã mua {formatCurrency2(total)}
+                    Đã mua {formatCurrency2(totalPayment)}
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Filter */}
-            <Filter />
+            <FilterOrder
+              setStatusBills={setStatusBills}
+              bills={bills}
+              showUILoading={showUILoading}
+              setCurrStatus={setCurrStatus}
+              currStatus={currStatus}
+            />
 
             <div className="">
               <div className="border border-gray_B9 rounded-2xl grid grid-cols-9 items-center p-2 mb-4">
@@ -63,37 +95,55 @@ const ProfileInfoPage = (props: any) => {
                 </div>
                 <div className="col-span-2 flex justify-center"></div>
               </div>
-              {data.map((bill, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="grid grid-cols-9 items-center p-3 first:border-t-0 border-t border-t-gray_B9"
-                  >
-                    <div className="col-span-3 flex justify-center">
-                      <span className="select-none">...</span>
-                    </div>
-                    <div className="col-span-2 flex justify-center">
-                      <span className="select-none bg-baseColor rounded-full text-black py-2 px-4">
-                        {ORDER_STATUS_TEXT[bill?.status?.[0]?.statusTimeline]}
-                      </span>
-                    </div>
-                    <div className="col-span-2 flex justify-center">
-                      <span className="select-none">
-                        {formatCurrency2(bill?.total || 0)}
-                      </span>
-                    </div>
-                    <div className="col-span-2 flex justify-center">
-                      <Link href={`/kiem-tra-don-hang/${bill?._id}`}>
-                        <a className="select-none bg-error rounded-full text-white py-2 px-4">
-                          Xem chi tiết
-                        </a>
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
-              {count === 0 && (
-                <p className="text-center italic">Bạn chưa có đơn hàng nào</p>
+              {!loading ? (
+                total > 0 ? (
+                  statusBills.map((bill, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="grid grid-cols-9 items-center p-3 first:border-t-0 border-t border-t-gray_B9"
+                      >
+                        <div className="col-span-3 flex justify-center">
+                          <span className="select-none">...</span>
+                        </div>
+                        <div className="col-span-2 flex justify-center">
+                          <span className="select-none bg-baseColor rounded-full text-black py-2 px-4">
+                            {
+                              ORDER_STATUS_TEXT[
+                                bill?.status?.[0]?.statusTimeline
+                              ]
+                            }
+                          </span>
+                        </div>
+                        <div className="col-span-2 flex justify-center">
+                          <span className="select-none">
+                            {formatCurrency2(bill?.total || 0)}
+                          </span>
+                        </div>
+                        <div className="col-span-2 flex justify-center">
+                          {/* <Link> */}
+                          <a
+                            href={`/kiem-tra-don-hang/${bill?._id}`}
+                            className="select-none bg-error rounded-full text-white py-2 px-4"
+                          >
+                            Xem chi tiết
+                          </a>
+                          {/* </Link> */}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : currStatus == filterStatus[0].value ? (
+                  <p className="text-center italic">
+                    Bạn chưa có đơn hàng nào.
+                  </p>
+                ) : (
+                  <p className="text-center italic">
+                    Bạn không có đơn hàng nào ở trạng thái này.
+                  </p>
+                )
+              ) : (
+                <p className="text-center">Đang tải...</p>
               )}
             </div>
           </div>
@@ -103,13 +153,18 @@ const ProfileInfoPage = (props: any) => {
   );
 };
 
-const Filter = () => {
-  const [currStatus, setCurrStatus] = React.useState<number | string>(
-    filterStatus[0].value
-  );
+const Filter = (props) => {
+  const { setStatusBills, bills, showUILoading, setCurrStatus, currStatus } =
+    props;
 
   const handleChooseStatus = async (status) => {
-    setCurrStatus(status);
+    if (status === currStatus) return;
+    batch(() => {
+      showUILoading(300);
+      setCurrStatus(status);
+      setStatusBills(bills[status]);
+      //   if (status == '') setStatusBills(bills?.All?.bills || []);
+    });
   };
 
   return (
@@ -132,5 +187,7 @@ const Filter = () => {
     </div>
   );
 };
+
+const FilterOrder = React.memo(Filter);
 
 export default ProfileInfoPage;

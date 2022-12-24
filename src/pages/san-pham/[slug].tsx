@@ -3,7 +3,10 @@ import ProductDetailPage from '~/components/pages/productDetailPage';
 import { API_URL } from '~/constants/api.constant';
 import API from '~/services/axiosClient';
 import { getCategories } from '~/services/request';
-import { ReturnResponse } from '~/services/response.interface';
+import {
+  ReturnListResponse,
+  ReturnResponse,
+} from '~/services/response.interface';
 
 type Props = {};
 
@@ -20,14 +23,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       url: API_URL.PRODUCT_READ,
       params: { _id: query.slug },
     });
+    const comments = await API.get<ReturnListResponse<any>>({
+      url: API_URL.PRODUCT_COMMENTS,
+      params: { _id: query.slug },
+    });
 
-    const data = await Promise.all([categories, productInfo]);
-    // console.log(`file: [slug].tsx:25 => data`, data);
+    const data = await Promise.all([categories, productInfo, comments]);
 
     return {
       props: {
         categories: data?.[0]?.data,
         product: data?.[1]?.data,
+        comments: data?.[2]?.data,
       },
     };
   } catch (error) {

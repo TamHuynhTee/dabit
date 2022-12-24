@@ -1,7 +1,11 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
 import OrderTrackingPage from '~/components/pages/orderTrackingPage';
+import { API_URL } from '~/constants/api.constant';
+import { COOKIE_KEYS } from '~/constants/cookie.constants';
+import API, { getAuthHeader } from '~/services/axiosClient';
 import { getCategories } from '~/services/request';
+import { ReturnResponse } from '~/services/response.interface';
 
 type Props = {};
 
@@ -11,19 +15,21 @@ const OrderTracking = (props: Props) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const { query } = context;
+    const { query, req } = context;
+    const { order } = query;
     const categories = await getCategories();
-    //   const productInfo = await API.get<ReturnResponse<any>>({
-    //     url: API_URL.CATEGORY_READ,
-    //     params: { ...query },
-    //   });
+    const orderInfo = await API.post<ReturnResponse<any>>({
+      url: API_URL.BILL_READ,
+      body: { _id: order },
+      headers: { ...getAuthHeader(req.cookies[COOKIE_KEYS.ACCESS_TOKEN]) },
+    });
 
-    const data = await Promise.all([categories]);
+    const data = await Promise.all([categories, orderInfo]);
 
     return {
       props: {
         categories: data?.[0]?.data,
-        //   cateInfo: data?.[1]?.data,
+        orderInfo: data?.[1]?.data,
       },
     };
   } catch (error) {

@@ -16,7 +16,7 @@ import {
 } from '@tabler/icons';
 import React from 'react';
 import { DateJS } from '~/helpers/date.helper';
-import { ORDER_STATUS } from '~/interfaces/order.interface';
+import { ORDER_STATUS, ORDER_STATUS_TEXT } from '~/interfaces/order.interface';
 
 type IStatus = {
   milestone: string;
@@ -71,19 +71,19 @@ const milestones: IStatus[] = [
     active: false,
   },
   {
-    milestone: 'Giao thành công',
-    status: ORDER_STATUS.DELIVERED,
-    iconName: ORDER_STATUS.DELIVERED,
-    active: false,
+    milestone: 'Đã hủy',
+    status: ORDER_STATUS.CANCELLED,
+    active: true,
+    iconName: ORDER_STATUS.CANCELLED,
+    time: '2022-10-24T18:28',
   },
-  //   {
-  //     milestone: 'Đã hủy',
-  //     status: ORDER_STATUS.CANCELLED,
-  //     active: true,
-  //     iconName: ORDER_STATUS.CANCELLED,
-  //     time: '2022-10-24T18:28',
-  //   },
-  // {milestone: 'Giao thất bại', status: ORDER_STATUS.FAILED_DELIVERED, color: 'gray_C1', },
+];
+
+const defaultTimeline = [
+  ORDER_STATUS.ORDERED,
+  ORDER_STATUS.CONFIRMED,
+  ORDER_STATUS.ON_DELIVERY,
+  ORDER_STATUS.DELIVERED,
 ];
 
 const getColorByStatus = (status: ORDER_STATUS, active: boolean) => {
@@ -91,14 +91,57 @@ const getColorByStatus = (status: ORDER_STATUS, active: boolean) => {
     ? [ORDER_STATUS.CANCELLED].some((e) => e == status)
       ? 'border-error bg-error'
       : 'border-green bg-green'
-    : 'border-gray_E1';
+    : 'border-gray_E1 bg-gray_E1';
 };
 
-const OrderStatusProgress = ({ status }: { status: ORDER_STATUS }) => {
+const OrderStatusProgress = ({
+  status,
+  timeline,
+}: {
+  status: ORDER_STATUS;
+  timeline: any[];
+}) => {
+  const milestoneShow = React.useMemo(() => {
+    const _timeline = [];
+    const cloneTimeline = timeline.reverse();
+    if (status === ORDER_STATUS.CANCELLED) {
+      cloneTimeline.map((_status) => {
+        _timeline.push({
+          status: _status.statusTimeline,
+          iconName: _status.statusTimeline,
+          active: true,
+          time: _status.time,
+          milestone: ORDER_STATUS_TEXT[_status.statusTimeline],
+        });
+      });
+    } else {
+      defaultTimeline.map((_status, i) => {
+        _timeline.push(
+          cloneTimeline[i]?.statusTimeline === _status
+            ? {
+                status: _status,
+                iconName: _status,
+                active: true,
+                time: cloneTimeline[i]?.time,
+                milestone: ORDER_STATUS_TEXT[_status],
+              }
+            : {
+                status: _status,
+                iconName: _status,
+                active: false,
+                time: '',
+                milestone: ORDER_STATUS_TEXT[_status],
+              }
+        );
+      });
+    }
+    return _timeline;
+  }, []);
+
   return (
     <div className="my-4">
       <div className="flex pb-12 px-10 max-w-5xl mx-auto">
-        {milestones.map((e, i) => {
+        {milestoneShow.map((e, i) => {
           const icon = getStatusIconFromName(e.iconName, {
             className: e.active ? 'text-white' : 'text-[#a1a1a1]',
           });
@@ -108,10 +151,10 @@ const OrderStatusProgress = ({ status }: { status: ORDER_STATUS }) => {
                 <div className="flex-1 align-center items-center align-middle content-center flex">
                   <div className="w-full bg-grey-light items-center align-middle align-center flex-1">
                     <div
-                      className={`${
-                        getColorByStatus(e.status, e.active)
-                        // e.active ? 'bg-green' : 'bg-gray_E1'
-                      } text-xs leading-none pt-[2px] text-center text-grey-darkest`}
+                      className={`${getColorByStatus(
+                        e.status,
+                        e.active
+                      )} text-xs leading-none pt-[2px] text-center text-grey-darkest`}
                     ></div>
                   </div>
                 </div>
@@ -119,10 +162,10 @@ const OrderStatusProgress = ({ status }: { status: ORDER_STATUS }) => {
 
               <div className="relative">
                 <div
-                  className={`w-10 h-10 border-2 ${
-                    getColorByStatus(e.status, e.active)
-                    // e.active ? 'border-green bg-green' : 'border-gray_E1'
-                  } mx-auto rounded-full text-lg flex items-center justify-center`}
+                  className={`w-10 h-10 border-2 ${getColorByStatus(
+                    e.status,
+                    e.active
+                  )} mx-auto rounded-full text-lg flex items-center justify-center`}
                 >
                   {icon}
                 </div>

@@ -1,6 +1,8 @@
 import { IconX } from '@tabler/icons';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { toast } from 'react-hot-toast';
 import { LOCAL_STORAGE_KEY } from '~/constants/localStorage.constants';
 import { formatCurrency2, getFromLocalStorage } from '~/helpers/base.helper';
 import { productURL } from '~/helpers/url.helper';
@@ -23,6 +25,8 @@ const CartSection = (props) => {
   const { userCartData } = props;
   const [cart, setCart] = React.useState([]);
   const [{ signedIn }] = useAuth();
+
+  const router = useRouter();
 
   const { changeItemQuantity, removeCartItem } = useCartHook();
 
@@ -87,6 +91,14 @@ const CartSection = (props) => {
     0
   );
 
+  const handleCheckout = () => {
+    if (cart?.length === 0) {
+      toast.error('Giỏ hàng trống');
+      return;
+    }
+    router.push('/thanh-toan');
+  };
+
   return (
     <div className="my-[30px]">
       <p className="text-center text-xl uppercase font-bold">Giỏ hàng</p>
@@ -110,11 +122,14 @@ const CartSection = (props) => {
             </span>
           </div>
 
-          <Link href={'/thanh-toan'}>
-            <a className="block mt-auto py-2 bg-baseColor rounded-lg text-center uppercase font-semibold">
-              Thanh toán
-            </a>
-          </Link>
+          {/* <Link href={handleCheckout()}> */}
+          <button
+            onClick={handleCheckout}
+            className="block mt-auto py-2 bg-baseColor rounded-lg text-center uppercase font-semibold"
+          >
+            Thanh toán
+          </button>
+          {/* </Link> */}
         </div>
       </div>
     </div>

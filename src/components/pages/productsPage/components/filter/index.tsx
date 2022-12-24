@@ -83,7 +83,7 @@ const SpecsFilter = (props) => {
     return _exist;
   };
 
-  console.log(getFromQuery());
+  //   console.log(getFromQuery());
 
   const [selected, setSelected] = React.useState({
     ...init(),
@@ -170,7 +170,7 @@ const SpecValues = (props) => {
   return (
     <div className="flex flex-wrap gap-3">
       {spec?.values?.map((e, i) => {
-        const active = selected[_name].indexOf(e.value) > -1;
+        const active = selected[_name]?.indexOf(e.value) > -1;
         return (
           <div
             key={i}
@@ -229,7 +229,7 @@ const ColorsFilter = (props) => {
     <div className="w-[400px]">
       <div className="flex flex-wrap gap-3">
         {colors?.map((e, i) => {
-          const active = selected.indexOf(e) > -1;
+          const active = selected?.indexOf(e) > -1;
 
           return (
             <div

@@ -53,6 +53,7 @@ const CheckoutPage = (props) => {
 
   React.useEffect(() => {
     if (cartCount === 0) router.back();
+    toast.error('Giỏ hàng trống!');
   }, []);
 
   React.useEffect(() => {

@@ -5,22 +5,18 @@ import Slider from 'react-slick';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
 import FavoriteButton from '~/components/common/favoriteButton';
+import ProductCard from '~/components/common/productCard';
 import StarRating from '~/components/common/starRating';
+import { API_URL } from '~/constants/api.constant';
 import { calculateSalePrice, formatCurrency2 } from '~/helpers/base.helper';
 import useCartHook from '~/hooks/useCartHook';
 import Layout from '~/layouts/Layout';
-import useAuth from '~/stores/auth';
+import API from '~/services/axiosClient';
+import { ReturnListResponse } from '~/services/response.interface';
+import useCart from '~/stores/cart';
 import GallerySlider from './components/GallerySlider';
 import Ratings from './components/RatingsSummary';
 import styles from './style.module.css';
-
-type Props = {};
-
-const rams = [
-  { value: '512gb', price: 28990000, title: '512 GB' },
-  { value: '256gb', price: 23990000, title: '256 GB' },
-  { value: '128gb', price: 21990000, title: '128 GB' },
-];
 
 const specifications = [
   {
@@ -57,34 +53,34 @@ const specifications = [
   },
 ];
 
-const similarities = [
-  {
-    thumbnail: '/assets/images/product/photo_2022-09-28_21-58-51.jpg',
-    name: 'Iphone 14 Pro',
-    price: 21000000,
-  },
-  {
-    thumbnail: '/assets/images/product/photo_2022-09-28_21-58-54.jpg',
-    name: 'Iphone 14 Pro',
-    price: 21000000,
-  },
-  {
-    thumbnail: '/assets/images/product/photo_2022-09-28_21-58-56.jpg',
-    name: 'Iphone 14 Pro',
-    price: 21000000,
-  },
-  {
-    thumbnail: '/assets/images/product/photo_2022-09-28_21-58-51.jpg',
-    name: 'Iphone 14 Pro',
-    price: 21000000,
-  },
-];
+// const similarities = [
+//   {
+//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-51.jpg',
+//     name: 'Iphone 14 Pro',
+//     price: 21000000,
+//   },
+//   {
+//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-54.jpg',
+//     name: 'Iphone 14 Pro',
+//     price: 21000000,
+//   },
+//   {
+//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-56.jpg',
+//     name: 'Iphone 14 Pro',
+//     price: 21000000,
+//   },
+//   {
+//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-51.jpg',
+//     name: 'Iphone 14 Pro',
+//     price: 21000000,
+//   },
+// ];
 
 // color = reduce quantity = 0 => coming soon
 // enable = false => ngung kinh doanh
 
 const ProductDetailPage = (props: any) => {
-  const { product } = props;
+  const { product, comments: productComments = [] } = props;
   const {
     price = 0,
     sale: salePercent = 0,
@@ -95,10 +91,27 @@ const ProductDetailPage = (props: any) => {
     colors = [],
     image_url,
     enable = true,
+    specs = {},
   } = product;
+  console.log(`file: index.tsx:95 => product`, product);
   const [currentColor, setCurrentColor] = React.useState<any>(colors?.[0]);
   const [quantity, setQuantity] = React.useState<number>(1);
   const { addToCart } = useCartHook();
+  const [{ products }] = useCart();
+  const [hints, setHints] = React.useState([]);
+
+  React.useEffect(() => {
+    (async () => {
+      const hintProducts = await API.post<ReturnListResponse<any>>({
+        url: API_URL.PRODUCT_HINT,
+        body: {
+          quantity: 5,
+          products: products.map((e) => e.product),
+        },
+      });
+      setHints(hintProducts.data);
+    })();
+  }, [products]);
 
   const slideImageRef = React.useRef<Slider | null>(null);
 
@@ -154,6 +167,15 @@ const ProductDetailPage = (props: any) => {
     },
     [gallery]
   );
+
+  const specsList = React.useMemo(() => {
+    const list = Object.keys(specs);
+    const result = [];
+    list.forEach((spec) => {
+      result.push({ label: spec, value: specs[spec] });
+    });
+    return result;
+  }, [specs]);
 
   return (
     <Layout categories={props?.categories || []}>
@@ -302,7 +324,7 @@ const ProductDetailPage = (props: any) => {
           <div className={styles.productSpecification}>
             <p className="text-[16px] font-semibold">Thông số kỹ thuật</p>
             <div className="mt-2 border border-gray_C1 rounded-xl">
-              {specifications.map((e, i) => (
+              {specsList.map((e, i) => (
                 <div key={i} className={styles.productSpecificationItem}>
                   <span>{e.label}</span>
                   <span>{e.value}</span>
@@ -315,7 +337,7 @@ const ProductDetailPage = (props: any) => {
 
       <Divider className="h-[1px] my-2" />
 
-      <div className="">
+      {/* <div className="">
         <p className="text-[20px] font-semibold text-dark_3 mb-2 uppercase">
           Phụ kiện đi kèm
         </p>
@@ -338,31 +360,32 @@ const ProductDetailPage = (props: any) => {
           ))}
         </div>
       </div>
-      <Divider className="h-[1px] my-2" />
+      <Divider className="h-[1px] my-2" /> */}
 
       <div className="">
         <p className="text-[20px] font-semibold text-dark_3 mb-2 uppercase">
-          Sản phẩm tương tự
+          Có thể bạn sẽ thích
         </p>
 
-        <div className="bg-gray_D9 grid grid-cols-5 gap-x-3 p-2 rounded-xl">
-          {similarities.map((e, i) => (
-            <div key={i} className="bg-white rounded-xl p-2">
-              <div className="w-full max-h-[200px] h-auto">
-                <img
-                  src={e.thumbnail}
-                  alt=""
-                  className="w-full h-full max-h-[200px] object-contain"
-                />
-              </div>
-              <Divider className="h-[1px] my-2" />
-              <p className="max_line-3 font-semibold text-lg text-center">
-                {e.name}
-              </p>
-              <p className="max_line-1 font-semibold text-lg text-yellow_E3 text-center">
-                {formatCurrency2(e.price)}
-              </p>
-            </div>
+        <div className="bg-white grid grid-cols-5 gap-x-3 p-2 rounded-xl">
+          {hints.map((e, i) => (
+            <ProductCard key={i} {...e} />
+            // <div key={i} className="bg-white rounded-xl p-2">
+            //   <div className="w-full max-h-[200px] h-auto">
+            //     <img
+            //       src={e.thumbnail}
+            //       alt=""
+            //       className="w-full h-full max-h-[200px] object-contain"
+            //     />
+            //   </div>
+            //   <Divider className="h-[1px] my-2" />
+            //   <p className="max_line-3 font-semibold text-lg text-center">
+            //     {e.name}
+            //   </p>
+            //   <p className="max_line-1 font-semibold text-lg text-yellow_E3 text-center">
+            //     {formatCurrency2(e.price)}
+            //   </p>
+            // </div>
           ))}
         </div>
       </div>
@@ -381,8 +404,15 @@ const ProductDetailPage = (props: any) => {
           Đánh giá sản phẩm
         </p>
 
-        <div className="bg-gray_F1 grid grid-cols-5 gap-x-3 p-2 rounded-xl">
+        <div className="bg-gray_F1 p-2 rounded-xl">
           <StarRating total_rate={total_rate} />
+          <div className="mt-3">
+            {productComments.length <= 0 ? (
+              <p className="text-center">Sản phẩm này chưa có đánh giá</p>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       </div>
     </Layout>

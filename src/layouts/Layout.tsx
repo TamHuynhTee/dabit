@@ -12,20 +12,19 @@ import Flex from '~/components/common/flex';
 import ImageRender from '~/components/common/imageRender';
 import ModalContainer from '~/components/common/modalContainer';
 import ModalLogin from '~/components/modals/loginModal';
-import { DRAWER_KEYS, MODAL_KEYS } from '~/constants/modal.constants';
+import { MODAL_KEYS } from '~/constants/modal.constants';
 import { openModalOrDrawer } from '~/helpers/modal.helper';
 import CategorySection from './components/CategorySection';
 import Footer from './components/footer';
 import styles from './layout.module.css';
 import ContactLink from './components/ContactLink';
-import DrawerContainer from '~/components/common/drawerContainer';
-import DrawerCart from '~/components/drawers/cart';
 import HeaderSearch from './components/headerSearch';
 import ModalRegister from '~/components/modals/registerModal';
 import { CATEGORY_MODEL } from '~/models/category.model';
 import useCartHook from '~/hooks/useCartHook';
 import dynamic from 'next/dynamic';
 import useAuth from '~/stores/auth';
+import { useRouter } from 'next/router';
 
 const CartCount = dynamic(() => import('./components/cartCount'), {
   ssr: false,
@@ -43,6 +42,11 @@ const Layout = (props: Props) => {
 
   const { cartCount } = useCartHook();
   const profile = userInfo;
+  const router = useRouter();
+
+  const handleToCart = () => {
+    router.push('/gio-hang');
+  };
 
   return (
     <React.Fragment>
@@ -156,10 +160,7 @@ const Layout = (props: Props) => {
                     justifyContent="center"
                     className="col-span-1"
                   >
-                    <button
-                      className="relative"
-                      onClick={() => openModalOrDrawer(DRAWER_KEYS.DRAWER_CART)}
-                    >
+                    <button className="relative" onClick={handleToCart}>
                       <IconShoppingCart
                         size={24}
                         strokeWidth={2}
@@ -188,9 +189,9 @@ const Layout = (props: Props) => {
         <ModalContainer modalKey={MODAL_KEYS.MODAL_REGISTER} animation="fade">
           <ModalRegister />
         </ModalContainer>
-        <DrawerContainer drawerKey={DRAWER_KEYS.DRAWER_CART}>
+        {/* <DrawerContainer drawerKey={DRAWER_KEYS.DRAWER_CART}>
           <DrawerCart />
-        </DrawerContainer>
+        </DrawerContainer> */}
       </Flex>
     </React.Fragment>
   );

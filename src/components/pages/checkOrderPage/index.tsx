@@ -7,9 +7,7 @@ import { MODAL_KEYS } from '~/constants/modal.constants';
 import { PHONE_REGEX } from '~/constants/regex.constants';
 import { openModalOrDrawer } from '~/helpers/modal.helper';
 import Layout from '~/layouts/Layout';
-import useAuth from '~/stores/auth';
-
-type Props = {};
+// import useAuth from '~/stores/auth';
 
 const CheckOrderPage = (props: any) => {
   return (
@@ -28,7 +26,7 @@ const CheckOrderPage = (props: any) => {
 };
 
 const CheckOrderForm = () => {
-  const [{ signedIn }] = useAuth();
+  //   const [{ signedIn }] = useAuth();
 
   return (
     <div className="my-[30px] px-[150px]">
@@ -36,7 +34,7 @@ const CheckOrderForm = () => {
         Kiểm tra thông tin đơn hàng <br /> và tình trạng vận chuyển
       </p>
       <div className="flex justify-center">
-        {signedIn ? <></> : <FormCheckOrder />}
+        <FormCheckOrder />
       </div>
     </div>
   );

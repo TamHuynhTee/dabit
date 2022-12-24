@@ -1,75 +1,58 @@
 import { GetServerSideProps } from 'next';
-import ProductCard from '~/components/common/productCard';
-import Layout from '~/layouts/Layout';
+import HomePage from '~/components/pages/homePage';
+import { API_URL } from '~/constants/api.constant';
 import API from '~/services/axiosClient';
 import { getCategories } from '~/services/request';
-import { ReturnResponse } from '~/services/response.interface';
+import { ReturnListResponse } from '~/services/response.interface';
 
 export default function Home(props) {
-  const { bestseller, categories } = props;
-  return (
-    <Layout categories={categories}>
-      {/* Banner */}
-      <div className="grid grid-cols-12 grid-rows-6 grid-flow-row-dense gap-y-3 gap-x-3">
-        <div className="col-span-8 row-span-full">
-          <img
-            className="w-full h-full object-cover"
-            src="/assets/images/home/banner_iphone_14_1.jpg"
-            alt="banner-1"
-          />
-        </div>
-        <div className="col-span-4 row-start-1 row-end-4">
-          <img
-            className="w-full h-full object-cover"
-            src="/assets/images/home/banner_iphone_14_2.jpg"
-            alt="banner-1"
-          />
-        </div>
-        <div className="col-span-2 row-start-4 row-end-7">
-          <img
-            className="w-full h-full object-cover"
-            src="/assets/images/home/banner_iphone_14_3.jpg"
-            alt="banner-1"
-          />
-        </div>
-        <div className="col-span-2 row-start-4 row-end-7">
-          <img
-            className="w-full h-full object-cover"
-            src="/assets/images/home/banner_iphone_14_4.jpg"
-            alt="banner-1"
-          />
-        </div>
-      </div>
-      {/* Bestseller */}
-      <div className="mt-8">
-        <p className="text-center text-2xl uppercase font-bold">
-          Bán chạy nhất
-        </p>
-        <div className="mt-4 bg-baseColor p-2">
-          <div className="grid grid-cols-5 gap-x-3">
-            {/* {bestseller?.data?.map((e, i) => {
-              return <ProductCard key={i} />;
-            })} */}
-          </div>
-        </div>
-      </div>
-    </Layout>
-  );
+  return <HomePage {...props} />;
 }
+
+const getTopProducts = async (category = '') => {
+  const cate = category ? { category } : {};
+  return await API.get<ReturnListResponse<any>>({
+    url: API_URL.TOP_PRODUCT,
+    params: {
+      quantity: 5,
+      ...cate,
+    },
+  });
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const categories = await getCategories();
-    const bestseller = await API.get<ReturnResponse<any>>({
-      url: '/api/product/list',
-    });
+    const categories: any = await getCategories();
+    // console.log(`file: index.tsx:15 => categories`, categories);
+    const bestseller = await getTopProducts();
+
+    let cateCount = [];
+    if (categories.data?.length > 5) {
+      cateCount = [
+        categories.data[0],
+        categories.data[1],
+        categories.data[2],
+        categories.data[3],
+        categories.data[4],
+      ];
+    } else cateCount = [...categories.data];
+
+    const listName = cateCount.map((e) => e.name);
+    const listFetch = cateCount.map((e) => getTopProducts(e.name));
+
+    const cateBestseller = await Promise.all(listFetch);
 
     const data = await Promise.all([categories, bestseller]);
+    const cateData = listName.map((e, i) => ({
+      name: e,
+      data: cateBestseller[i].data,
+    }));
 
     return {
       props: {
         categories: data?.[0]?.data,
         bestseller: data?.[1]?.data,
+        categoryBestseller: cateData,
       },
     };
   } catch (error) {
