@@ -41,13 +41,13 @@ const useCartHook = () => {
     actionCart.changeLocalCartItemQuantity(payload);
   };
 
-  const removeCartItem = (product: string) => {
+  const removeCartItem = (payload: Partial<LocalCartPayload>) => {
     if (signedIn) {
-      actionCart.removeAuthCartItem(product);
+      actionCart.removeAuthCartItem(payload);
       return;
     }
 
-    actionCart.removeLocalCartItem(product);
+    actionCart.removeLocalCartItem(payload);
   };
 
   const clearCart = () => {

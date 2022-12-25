@@ -71,11 +71,14 @@ export const changeLocalCartItemQuantity = (payload: LocalCartPayload) => {
   };
 };
 
-export const removeLocalCartItem = (product: string) => {
+export const removeLocalCartItem = (payload: Partial<LocalCartPayload>) => {
   return async ({ setState, getState }: Actions) => {
     const { products, count } = getState();
+    const { product, color } = payload;
 
-    const cloneCart = products.filter((e) => e.product !== product);
+    const cloneCart = products.filter(
+      (e) => e.product !== product || e.color !== color
+    );
     const _newCount = count - 1;
 
     saveToLocalStorage(LOCAL_STORAGE_KEY.CART_COUNT_KEY, _newCount);
@@ -162,11 +165,14 @@ export const changeAuthCartItemQuantity = (payload: LocalCartPayload) => {
   };
 };
 
-export const removeAuthCartItem = (product: string) => {
+export const removeAuthCartItem = (payload: Partial<LocalCartPayload>) => {
   return async ({ setState, getState }: Actions) => {
     const { products, count } = getState();
+    const { product, color } = payload;
 
-    const cloneCart = products.filter((e) => e.product !== product);
+    const cloneCart = products.filter(
+      (e) => e.product !== product || e.color !== color
+    );
     const _newCount = count - 1;
 
     const token = getCookie(COOKIE_KEYS.ACCESS_TOKEN);

@@ -13,5 +13,4 @@ export const ORDER_STATUS_TEXT = {
   [ORDER_STATUS.ON_DELIVERY]: 'Đang giao hàng',
   [ORDER_STATUS.DELIVERED]: 'Đã nhận hàng',
   [ORDER_STATUS.CANCELLED]: 'Đã hủy',
-  //   [ORDER_STATUS.FAILED_DELIVERED]: 'Giao thất bại',
 };

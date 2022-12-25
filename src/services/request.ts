@@ -28,7 +28,7 @@ export const calculateCartBill = async ({
 }) => {
   const auth = token ? { headers: { ...getAuthHeader(token) } } : {};
   return await API.post<ReturnResponse<any>>({
-    url: '/api/bill/calc',
+    url: API_URL.BILL_CALC,
     ...auth,
     body: { ...payload },
   });

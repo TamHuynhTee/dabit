@@ -13,13 +13,9 @@ const EmptyDistrict = {
   label: 'Chọn quận huyện',
   value: '',
 };
-// const EmptyWard = {
-//   label: 'Chọn phường/xã',
-//   value: '',
-// };
 
 const PickLocation = (props) => {
-  const { setValue, errors } = props;
+  const { setValue, errors, handleGetDiscount, getValues } = props;
 
   const [province, setProvince] = React.useState([EmptyProvince]);
 
@@ -98,7 +94,6 @@ const PickLocation = (props) => {
   const onChangeProvince = (selected) => {
     setValue('province', selected?.label);
     setValue('district', '');
-    setValue('ward', '');
     setDistrict([EmptyDistrict]);
     // setWard([EmptyWard]);
 
@@ -107,6 +102,7 @@ const PickLocation = (props) => {
 
   const onChangeDistrict = (selected) => {
     setValue('district', selected?.label);
+    handleGetDiscount({});
     // setWard([EmptyWard]);
     // loadWardData_V2(selected?.value);
   };

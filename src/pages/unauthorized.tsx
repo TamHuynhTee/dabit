@@ -1,25 +1,22 @@
 import { GetServerSideProps } from 'next';
-import ProfileInfoPage from '~/components/pages/profile/profileInfoPage';
-import { COOKIE_KEYS } from '~/constants/cookie.constants';
+import React from 'react';
+import Layout from '~/layouts/Layout';
 import { getCategories } from '~/services/request';
 
-export default function ProfileInfo(props) {
-  return <ProfileInfoPage {...props} />;
-}
+type Props = {};
+
+const Unauthorized = (props) => {
+  return (
+    <Layout categories={props?.categories || []}>
+      <div className="flex justify-center">Vui lòng đăng nhập để tiếp tục</div>
+    </Layout>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { req } = context;
     const categories = await getCategories();
-    const token = req.cookies[COOKIE_KEYS.ACCESS_TOKEN];
-    if (!token)
-      return {
-        redirect: {
-          destination: '/unauthorized',
-          permanent: false,
-        },
-      };
-
     const data = await Promise.all([categories]);
 
     return {
@@ -34,3 +31,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
+
+export default Unauthorized;

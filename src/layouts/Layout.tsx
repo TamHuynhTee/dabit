@@ -3,6 +3,7 @@ import React from 'react';
 import {
   IconHistory,
   IconMailForward,
+  IconMessageCircle2,
   IconPhone,
   IconShoppingCart,
   IconTruckDelivery,
@@ -43,6 +44,8 @@ const Layout = (props: Props) => {
   const { cartCount } = useCartHook();
   const profile = userInfo;
   const router = useRouter();
+
+  const slicedCategories = categories.slice(0, 5);
 
   const handleToCart = () => {
     router.push('/gio-hang');
@@ -174,7 +177,7 @@ const Layout = (props: Props) => {
             </div>
           </div>
           {/* Category section */}
-          <CategorySection categories={categories} />
+          <CategorySection categories={slicedCategories} />
         </header>
         {/* body */}
         <main className="flex-grow">
@@ -192,6 +195,16 @@ const Layout = (props: Props) => {
         {/* <DrawerContainer drawerKey={DRAWER_KEYS.DRAWER_CART}>
           <DrawerCart />
         </DrawerContainer> */}
+
+        {signedIn && (
+          <div className="fixed bottom-5 shadow-lg right-5 rounded-full">
+            <a href="/chat">
+              <span className="flex bg-blue_00 items-center justify-center h-16 w-16 rounded-full">
+                <IconMessageCircle2 stroke={2} size={28} color={'#fff'} />
+              </span>
+            </a>
+          </div>
+        )}
       </Flex>
     </React.Fragment>
   );

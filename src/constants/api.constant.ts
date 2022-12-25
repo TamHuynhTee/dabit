@@ -15,9 +15,12 @@ export const API_URL = {
   PUSH_CART: '/api/users/pushCart',
   USER_BILL_LIST: '/api/users/bills',
   BILL_LIST: '/api/bill/list',
+  BILL_CALC: '/api/bill/calc',
   BILL_READ: '/api/bill/read',
   BILL_UPDATE: '/api/bill/update',
   TOP_PRODUCT: '/api/product/top',
+  GET_OTP: '/api/auth/otp',
+  CHECK_OTP: '/api/auth/checkOtp',
   DISTRICT: (proCode: string) => `/api/location/district/${proCode}`,
   WARD: (disCode: string) => `/api/location/ward/${disCode}`,
 };

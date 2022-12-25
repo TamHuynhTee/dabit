@@ -79,9 +79,11 @@ const CartSection = (props) => {
   );
 
   const handleRemoveItem = React.useCallback(
-    (product) => {
-      removeCartItem(product);
-      setCart((list) => list.filter((e) => e.product !== product));
+    ({ product, color }) => {
+      removeCartItem({ product, color });
+      setCart((list) =>
+        list.filter((e) => e.product !== product || e.color !== color)
+      );
     },
     [signedIn]
   );
@@ -99,6 +101,8 @@ const CartSection = (props) => {
     router.push('/thanh-toan');
   };
 
+  const totalQuantity = cart.reduce((prev, curr) => prev + curr?.quantity, 0);
+
   return (
     <div className="my-[30px]">
       <p className="text-center text-xl uppercase font-bold">Giỏ hàng</p>
@@ -114,22 +118,34 @@ const CartSection = (props) => {
             />
           ))}
         </div>
-        <div className="col-span-1 h-full flex flex-col bg-gray_F1 rounded-lg px-[15px] py-[10px]">
+        <div className="col-span-1 h-fit flex flex-col bg-gray_F1 rounded-lg px-[15px] py-[10px]">
           <div className="flex items-center justify-between gap-2">
+            <span className="font-semibold text-base">Tổng số mặt hàng:</span>
+            <span className="font-normal text-base">{cart?.length}</span>
+          </div>
+          <div className="flex items-center justify-between gap-2 mt-2">
+            <span className="font-semibold text-base">Tổng số lượng:</span>
+            <span className="font-normal text-base">{totalQuantity}</span>
+          </div>
+          <div className="flex items-center justify-between gap-2 mt-2">
             <span className="font-semibold text-base">Tạm tính:</span>
             <span className="font-normal text-base">
               {formatCurrency2(totalBill)}
             </span>
           </div>
 
-          {/* <Link href={handleCheckout()}> */}
           <button
             onClick={handleCheckout}
-            className="block mt-auto py-2 bg-baseColor rounded-lg text-center uppercase font-semibold"
+            className="block mt-14 py-2 bg-baseColor rounded-lg text-center uppercase font-semibold"
           >
             Thanh toán
           </button>
-          {/* </Link> */}
+          <button
+            onClick={handleCheckout}
+            className="block mt-4 py-2 bg-black text-white rounded-lg text-center uppercase font-semibold"
+          >
+            Tiếp tục mua hàng
+          </button>
         </div>
       </div>
     </div>
@@ -200,7 +216,7 @@ const CartItem = (props) => {
           </span>
         </div>
         <div className="col-span-1 flex flex-col items-center justify-center">
-          <button onClick={() => handleRemoveItem(product)}>
+          <button onClick={() => handleRemoveItem({ product, color })}>
             <IconX stroke={2} color="#333333" size={20} />
           </button>
         </div>

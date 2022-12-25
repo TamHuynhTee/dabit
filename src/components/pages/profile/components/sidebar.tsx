@@ -71,7 +71,7 @@ const Sidebar = () => {
   };
 
   return (
-    <nav className="sticky top-0 h-fit bg-white border border-gray_F1 rounded-[5px] p-[10px]">
+    <nav className="sticky top-0 h-fit bg-white border border-gray_F1 rounded-[5px] p-[10px] shadow-md">
       <ul className="flex flex-col">
         {links.map((e, i) => {
           const active = isActive(e.slug);

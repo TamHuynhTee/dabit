@@ -13,10 +13,19 @@ export default function CheckoutHistory(props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { req } = context;
+    const token = req.cookies[COOKIE_KEYS.ACCESS_TOKEN];
+    if (!token)
+      return {
+        redirect: {
+          destination: '/unauthorized',
+          permanent: false,
+        },
+      };
+
     const categories = await getCategories();
     const billList = await API.post<ReturnResponse<any>>({
       url: API_URL.USER_BILL_LIST,
-      headers: { ...getAuthHeader(req.cookies[COOKIE_KEYS.ACCESS_TOKEN]) },
+      headers: { ...getAuthHeader(token) },
     });
 
     const data = await Promise.all([categories, billList]);

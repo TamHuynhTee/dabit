@@ -4,10 +4,13 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import ErrorText from '~/components/common/errorText';
 import { API_URL } from '~/constants/api.constant';
+import { COOKIE_KEYS } from '~/constants/cookie.constants';
 import { LOCAL_STORAGE_KEY } from '~/constants/localStorage.constants';
 import { PHONE_REGEX } from '~/constants/regex.constants';
 import { formatCurrency2, getFromLocalStorage } from '~/helpers/base.helper';
+import { getCookie } from '~/helpers/cookie.helper';
 import useCartHook from '~/hooks/useCartHook';
+import useDebounce from '~/hooks/useDebounce';
 import Layout from '~/layouts/Layout';
 import API, { getAuthHeader } from '~/services/axiosClient';
 import { calculateCartBill } from '~/services/request';
@@ -30,14 +33,15 @@ const CheckoutPage = (props) => {
   const [checkout, setCheckout] = React.useState<any>();
   const shippingFee = checkout?.ship || 0;
   const { clearCart, cartCount } = useCartHook();
-  const [{ userInfo }] = useAuth();
+  const [{ userInfo, signedIn }] = useAuth();
 
   const {
     register,
     formState: { errors },
     setValue,
     handleSubmit,
-  } = useForm({
+    getValues,
+  } = useForm<any>({
     defaultValues: userInfo
       ? {
           name: userInfo?.name,
@@ -52,8 +56,10 @@ const CheckoutPage = (props) => {
   });
 
   React.useEffect(() => {
-    if (cartCount === 0) router.back();
-    toast.error('Giỏ hàng trống!');
+    if (cartCount === 0) {
+      router.back();
+      toast.error('Giỏ hàng trống!');
+    }
   }, []);
 
   React.useEffect(() => {
@@ -99,7 +105,47 @@ const CheckoutPage = (props) => {
     }
   }, []);
 
-  const totalBill = checkout?.total || 0;
+  const initialBill = checkout?.total || 0;
+  const totalBill =
+    (checkout?.total || 0) - (checkout?.discount || 0) + (checkout?.ship || 0);
+
+  const handleGetDiscount = ({ address = '' }: any) => {
+    const discountCode = getValues('discountCode');
+    const province = getValues('province');
+    const district = getValues('district');
+    const _address = getValues('address');
+    const body: any = {
+      payload: {
+        address: {
+          province,
+          district,
+          address: address || _address,
+        },
+      },
+    };
+    if (signedIn) {
+      const token = getCookie(COOKIE_KEYS.ACCESS_TOKEN);
+      body.token = token;
+      body.payload.cart = null;
+    } else {
+      const localCart =
+        getFromLocalStorage<Array<any>>(LOCAL_STORAGE_KEY.CART_PRODUCT_KEY) ||
+        [];
+      body.payload.cart = localCart;
+    }
+    body.payload.discountCode = discountCode;
+
+    calculateCartBill({
+      ...body,
+    }).then((res) => {
+      const { cart_details, address, ...checkout } = res.data;
+      setCheckout(checkout);
+    });
+  };
+
+  const handleChangeAddress = useDebounce((e) => {
+    handleGetDiscount({ address: e.target.value });
+  }, 400);
 
   const handleCheckout = async (data, e) => {
     e.preventDefault();
@@ -128,9 +174,9 @@ const CheckoutPage = (props) => {
         body: { ...payload },
       });
 
-      console.log(`file: index.tsx:94 => result`, result);
+      if (result.status && result.status !== 200) throw new Error();
       if (result?.status === 200 && data.payment === 'cod')
-        router.push('/thanh-toan/thanh-cong');
+        window.location.href = '/thanh-toan/thanh-cong';
       if (result?.data && data.payment === 'vnpay')
         window.location.href = result?.data;
 
@@ -139,8 +185,6 @@ const CheckoutPage = (props) => {
       toast.error('Có lỗi thanh toán');
       console.log('err,', error);
     }
-
-    // router.push('/thanh-toan/thanh-cong');
   };
 
   return (
@@ -236,7 +280,12 @@ const CheckoutPage = (props) => {
               <div className="flex-grow h-[1px] bg-gray_D9"></div>
             </div>
 
-            <PickLocation setValue={setValue} errors={errors} />
+            <PickLocation
+              setValue={setValue}
+              getValues={getValues}
+              errors={errors}
+              handleGetDiscount={handleGetDiscount}
+            />
 
             <div className="mb-[30px] relative">
               <label
@@ -256,6 +305,7 @@ const CheckoutPage = (props) => {
                 type="text"
                 placeholder="VD: <Số nhà>, <Tên đường>, ..."
                 className="px-[30px] h-[60px] rounded-[6px] border border-gray_D9 w-full outline-none"
+                onChange={handleChangeAddress}
               />
               {errors?.['address'] && (
                 <ErrorText text={errors['address'].message} />
@@ -313,7 +363,14 @@ const CheckoutPage = (props) => {
               <div className="flex items-center justify-between py-[15px] border-b-[2px] border-b-gray_D9">
                 <span className="text-[18px]">Tổng tạm tính</span>
                 <span className="text-[18px]">
-                  {formatCurrency2(totalBill)}
+                  {formatCurrency2(initialBill)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between py-[15px] border-b-[2px] border-b-gray_D9">
+                <span className="text-[18px]">Giảm giá</span>
+                <span className="text-[18px]">
+                  {formatCurrency2(checkout?.discount || 0)}
                 </span>
               </div>
 
@@ -362,13 +419,22 @@ const CheckoutPage = (props) => {
               >
                 Mã giảm giá
               </label>
-              <input
-                {...register('discountCode')}
-                id="discountCode"
-                type="text"
-                placeholder="Nhập mã"
-                className="px-[30px] h-[60px] rounded-[6px] border border-gray_D9 w-full outline-none"
-              />
+              <div className="flex mt-2">
+                <input
+                  {...register('discountCode')}
+                  id="discountCode"
+                  type="text"
+                  placeholder="Nhập mã"
+                  className="px-[30px] h-[50px] rounded-tl-[6px] rounded-bl-[6px] border border-gray_D9 w-full outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleGetDiscount({})}
+                  className="h-[50px] w-fit px-[8px] text-sm text-white bg-blue_00 rounded-tr-[6px] rounded-br-[6px]"
+                >
+                  Dùng
+                </button>
+              </div>
             </div>
 
             <div className="order wrapper">

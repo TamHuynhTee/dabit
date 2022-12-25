@@ -1,4 +1,4 @@
-import { IconDeviceMobile, IconKey } from '@tabler/icons';
+import { IconDeviceMobile, IconKey, IconNumber1 } from '@tabler/icons';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -8,7 +8,6 @@ import ImageRender from '~/components/common/imageRender';
 import { API_URL } from '~/constants/api.constant';
 import { COOKIE_KEYS } from '~/constants/cookie.constants';
 import { MODAL_KEYS } from '~/constants/modal.constants';
-import { PHONE_REGEX } from '~/constants/regex.constants';
 import { responseHasError } from '~/helpers/base.helper';
 import { setCookie } from '~/helpers/cookie.helper';
 import { closeModalOrDrawer, openModalOrDrawer } from '~/helpers/modal.helper';
@@ -22,12 +21,19 @@ interface IResLogin {
   tokens: ACCESS_REFRESH_TOKEN;
 }
 
+enum LoginType {
+  PASSWORD = 0,
+  OTP = 1,
+}
+
 const ModalLogin = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const [type, setType] = React.useState(LoginType.PASSWORD);
 
   const handleLogin = async (data: any) => {
     try {
@@ -45,11 +51,34 @@ const ModalLogin = () => {
       setCookie(COOKIE_KEYS.ACCESS_TOKEN, result.data.tokens.access.token);
       setCookie(COOKIE_KEYS.REFRESH_TOKEN, result.data.tokens.refresh.token);
 
-      window.location.reload();
+      window.location.href = '/';
       // closeModalOrDrawer(MODAL_KEYS.MODAL_LOGIN);
     } catch (error) {
       toast.error(error?.message || error?.data?.message);
     }
+  };
+
+  const handleSendOTP = async (data: any) => {
+    try {
+      await API.post<any>({
+        url: API_URL.GET_OTP,
+        body: {
+          phone: data.phone,
+        },
+      });
+
+      //   if (responseHasError(result.error)) throw new Error(result.message);
+      //   toast.success(result?.msg);
+
+      window.location.href = `/nhap-otp?email_or_phone=${data.phone}`;
+    } catch (error) {
+      toast.error(error?.message || error?.data?.message);
+    }
+  };
+
+  const handleChangeType = (e) => {
+    const value = e.target.value;
+    setType(value);
   };
 
   return (
@@ -63,7 +92,9 @@ const ModalLogin = () => {
       </Flex>
       <div className="mt-[20px]">
         <form
-          onSubmit={handleSubmit(handleLogin)}
+          onSubmit={handleSubmit(
+            type == LoginType.PASSWORD ? handleLogin : handleSendOTP
+          )}
           className="flex flex-col gap-3 px-[10px]"
         >
           <div>
@@ -74,11 +105,7 @@ const ModalLogin = () => {
               <IconDeviceMobile size={20} />
               <input
                 {...register('phone', {
-                  required: 'Vui lòng nhập số điện thoại',
-                  pattern: {
-                    value: PHONE_REGEX,
-                    message: 'Số điện thoại không đúng định dạng',
-                  },
+                  required: 'Vui lòng nhập số điện thoại hoặc email',
                 })}
                 type="text"
                 className="border-none outline-none bg-transparent flex-1"
@@ -87,26 +114,31 @@ const ModalLogin = () => {
             </Flex>
             {errors?.phone && <ErrorText text={errors?.phone.message} />}
           </div>
-          <div>
-            <Flex
-              className="py-[5px] h-[40px] gap-3 border-b border-b-[#c3c3c3]"
-              alignItem="center"
-            >
-              <IconKey size={20} />
+          {type == LoginType.PASSWORD && (
+            <PasswordInput register={register} errors={errors} />
+          )}
+          <div className="flex items-center justify-between gap-2">
+            <label htmlFor="type_password" className="flex items-center">
               <input
-                {...register('password', {
-                  required: 'Vui lòng nhập mật khẩu',
-                  minLength: {
-                    value: 6,
-                    message: 'Nhập ít nhất 6 ký tự',
-                  },
-                })}
-                type="password"
-                className="border-none outline-none bg-transparent flex-1"
-                placeholder="Nhập mật khẩu"
+                defaultChecked
+                type="radio"
+                id="type_password"
+                name="type_picker"
+                value={LoginType.PASSWORD}
+                onChange={handleChangeType}
               />
-            </Flex>
-            {errors?.password && <ErrorText text={errors?.password.message} />}
+              <span className="ml-3">Mật khẩu</span>
+            </label>
+            <label htmlFor="type_otp" className="flex items-center">
+              <input
+                type="radio"
+                id="type_otp"
+                name="type_picker"
+                value={LoginType.OTP}
+                onChange={handleChangeType}
+              />
+              <span className="ml-3">Mã OTP</span>
+            </label>
           </div>
           <label htmlFor="remember" className="flex items-center gap-2">
             <input type="checkbox" name="remember" id="remember" />
@@ -116,7 +148,7 @@ const ModalLogin = () => {
             type="submit"
             className="py-[5px] h-[40px] bg-[#000] text-[#fff] rounded"
           >
-            Đăng nhập
+            {type === LoginType.PASSWORD ? 'Đăng nhập' : 'Gửi mã OTP'}
           </button>
           <a className="text-[#3c3cf5] cursor-pointer">Quên mật khẩu?</a>
           <button
@@ -131,6 +163,56 @@ const ModalLogin = () => {
           </button>
         </form>
       </div>
+    </div>
+  );
+};
+
+const PasswordInput = (props) => {
+  const { register, errors } = props;
+  return (
+    <div>
+      <Flex
+        className="py-[5px] h-[40px] gap-3 border-b border-b-[#c3c3c3]"
+        alignItem="center"
+      >
+        <IconKey size={20} />
+        <input
+          {...register('password', {
+            required: 'Vui lòng nhập mật khẩu',
+            minLength: {
+              value: 6,
+              message: 'Nhập ít nhất 6 ký tự',
+            },
+          })}
+          type="password"
+          className="border-none outline-none bg-transparent flex-1"
+          placeholder="Nhập mật khẩu"
+        />
+      </Flex>
+      {errors?.password && <ErrorText text={errors?.password.message} />}
+    </div>
+  );
+};
+
+const OTPInput = (props) => {
+  const { register, errors } = props;
+  return (
+    <div>
+      <Flex
+        className="py-[5px] h-[40px] gap-3 border-b border-b-[#c3c3c3]"
+        alignItem="center"
+      >
+        <IconNumber1 size={20} />
+        <input
+          {...register('otp', {
+            required: 'Vui lòng nhập mã otp',
+          })}
+          type="text"
+          className="border-none outline-none bg-transparent flex-1"
+          placeholder="Nhập mã otp"
+        />
+      </Flex>
+      {errors?.otp && <ErrorText text={errors?.otp.message} />}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { MONGOOSE_MODEL } from './mongoose.model';
 
 export interface USER_MODEL extends MONGOOSE_MODEL {
-  role: 'user';
+  role: string;
   isEmailVerified: boolean;
   phone: string;
   email: string;

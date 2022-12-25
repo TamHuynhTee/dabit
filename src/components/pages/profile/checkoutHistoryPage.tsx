@@ -1,6 +1,5 @@
 import { IconChecklist, IconWallet } from '@tabler/icons';
 import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
 import { batch } from 'react-sweet-state';
 import { ORDER_STATUS_FILTER } from '~/constants/order.constants';
@@ -21,12 +20,19 @@ const filterStatus = [
   ...ORDER_STATUS_FILTER,
 ];
 
+const getTagColor = (status) => {
+  if (status == ORDER_STATUS.ORDERED) return 'bg-[#9EA1D4] text-white';
+  if (status == ORDER_STATUS.CONFIRMED) return 'bg-[#A8D1D1] text-white';
+  if (status == ORDER_STATUS.ON_DELIVERY) return 'bg-[#F1F7B5] text-white';
+  if (status == ORDER_STATUS.DELIVERED) return 'bg-[#86C8BC] text-white';
+  if (status == ORDER_STATUS.CANCELLED) return 'bg-[#FD8A8A] text-white';
+};
+
 const ProfileInfoPage = (props: any) => {
   const { bills } = props;
-  const { All = { bills: [] } } = bills;
+  const { All } = bills;
 
-  console.log(`file: checkoutHistoryPage.tsx:28 => bills`, bills);
-  const [statusBills, setStatusBills] = React.useState(All);
+  const [statusBills, setStatusBills] = React.useState(All.reverse() || []);
   const [currStatus, setCurrStatus] = React.useState<number | string>(
     filterStatus[0].value
   );
@@ -107,7 +113,11 @@ const ProfileInfoPage = (props: any) => {
                           <span className="select-none">...</span>
                         </div>
                         <div className="col-span-2 flex justify-center">
-                          <span className="select-none bg-baseColor rounded-full text-black py-2 px-4">
+                          <span
+                            className={`select-none ${getTagColor(
+                              bill?.status?.[0]?.statusTimeline
+                            )} rounded-full py-2 px-4`}
+                          >
                             {
                               ORDER_STATUS_TEXT[
                                 bill?.status?.[0]?.statusTimeline
@@ -160,10 +170,9 @@ const Filter = (props) => {
   const handleChooseStatus = async (status) => {
     if (status === currStatus) return;
     batch(() => {
-      showUILoading(300);
+      showUILoading(400);
       setCurrStatus(status);
-      setStatusBills(bills[status]);
-      //   if (status == '') setStatusBills(bills?.All?.bills || []);
+      setStatusBills(bills[status].reverse());
     });
   };
 

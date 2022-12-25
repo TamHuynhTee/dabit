@@ -1,3 +1,4 @@
+import React from 'react';
 import ProductCard from '~/components/common/productCard';
 import Layout from '~/layouts/Layout';
 
@@ -63,6 +64,8 @@ const HomePage = (props) => {
       </div>
 
       {categoryBestseller.map((e, i) => {
+        if (e?.data?.length <= 0)
+          return <React.Fragment key={i}></React.Fragment>;
         return (
           <div className="mt-8" key={i}>
             <SectionTitle title={`${e.name} bán chạy nhất`} />

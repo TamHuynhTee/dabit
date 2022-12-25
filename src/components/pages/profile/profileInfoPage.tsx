@@ -10,7 +10,13 @@ const ProfileInfoPage = (props: any) => {
         <title>Thông tin cá nhân</title>
       </Head>
       <Layout categories={props?.categories || []}>
-        <ProfilePageFrame>a</ProfilePageFrame>
+        <ProfilePageFrame>
+          <div className="px-[20px]">
+            <div className="flex justify-center">
+              <form className="max-w-[400px]"></form>
+            </div>
+          </div>
+        </ProfilePageFrame>
       </Layout>
     </>
   );

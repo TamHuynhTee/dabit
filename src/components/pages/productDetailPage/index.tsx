@@ -4,7 +4,6 @@ import { toast } from 'react-hot-toast';
 import Slider from 'react-slick';
 import Breadcrumb from '~/components/common/breadcrumbs';
 import Divider from '~/components/common/divider';
-import FavoriteButton from '~/components/common/favoriteButton';
 import ProductCard from '~/components/common/productCard';
 import StarRating from '~/components/common/starRating';
 import { API_URL } from '~/constants/api.constant';
@@ -17,67 +16,6 @@ import useCart from '~/stores/cart';
 import GallerySlider from './components/GallerySlider';
 import Ratings from './components/RatingsSummary';
 import styles from './style.module.css';
-
-const specifications = [
-  {
-    label: 'Kích thước màn hình',
-    value: '6.1 inches',
-  },
-  {
-    label: 'Độ phân giải màn hình',
-    value: '2532 x 1170 pixels',
-  },
-  {
-    label: 'Trọng lượng',
-    value: '172g',
-  },
-  {
-    label: 'Công nghệ màn hình',
-    value: 'OLED',
-  },
-  {
-    label: 'Camera sau',
-    value: 'Camera chính: 12MP, ƒ/1.5\nCamera góc siêu rộng: 12MP, ƒ/2.4',
-  },
-  {
-    label: 'Camera trước',
-    value: '12MP, ƒ/1.9',
-  },
-  {
-    label: 'Chipset',
-    value: 'Apple A15 Bionic',
-  },
-  {
-    label: 'Dung lượng RAM',
-    value: '6 GB',
-  },
-];
-
-// const similarities = [
-//   {
-//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-51.jpg',
-//     name: 'Iphone 14 Pro',
-//     price: 21000000,
-//   },
-//   {
-//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-54.jpg',
-//     name: 'Iphone 14 Pro',
-//     price: 21000000,
-//   },
-//   {
-//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-56.jpg',
-//     name: 'Iphone 14 Pro',
-//     price: 21000000,
-//   },
-//   {
-//     thumbnail: '/assets/images/product/photo_2022-09-28_21-58-51.jpg',
-//     name: 'Iphone 14 Pro',
-//     price: 21000000,
-//   },
-// ];
-
-// color = reduce quantity = 0 => coming soon
-// enable = false => ngung kinh doanh
 
 const ProductDetailPage = (props: any) => {
   const { product, comments: productComments = [] } = props;
@@ -93,7 +31,6 @@ const ProductDetailPage = (props: any) => {
     enable = true,
     specs = {},
   } = product;
-  console.log(`file: index.tsx:95 => product`, product);
   const [currentColor, setCurrentColor] = React.useState<any>(colors?.[0]);
   const [quantity, setQuantity] = React.useState<number>(1);
   const { addToCart } = useCartHook();
@@ -118,12 +55,12 @@ const ProductDetailPage = (props: any) => {
   const newPrice = calculateSalePrice(price, salePercent);
 
   const gallery = React.useMemo(() => {
-    const images = image_url ? [image_url] : [];
+    const images = image_url ? [{ _id: '', image: image_url }] : [];
     colors?.forEach((element) => {
       images.push({ _id: element?._id, image: element?.image_url });
     });
     return images;
-  }, []);
+  }, [colors, image_url]);
 
   const handleAddToCart = () => {
     if (currentColor) {
@@ -157,7 +94,7 @@ const ProductDetailPage = (props: any) => {
   const isComingSoon = React.useMemo(() => {
     const inStock = colors?.reduce((e, v) => e + v?.quantity, 0);
     return inStock <= 0;
-  }, []);
+  }, [colors]);
 
   const pickColor = React.useCallback(
     (color) => {
@@ -313,7 +250,7 @@ const ProductDetailPage = (props: any) => {
                     </button>
                   </>
                 )}
-                <FavoriteButton containerClass="col-span-1 border-2 border-gray_D9 bg-gray_D9 rounded-lg w-full p-[15px] flex justify-center" />
+                {/* <FavoriteButton containerClass="col-span-1 border-2 border-gray_D9 bg-gray_D9 rounded-lg w-full p-[15px] flex justify-center" /> */}
                 {/* <div className="col-span-1 border-2 border-gray_D9 bg-gray_D9 rounded-lg w-full p-[15px] flex justify-center">
               </div> */}
               </div>

@@ -30,6 +30,9 @@ function App({ Component, ...rest }: AppProps) {
         toastOptions={{
           duration: 4000,
         }}
+        containerStyle={{
+          top: '100px',
+        }}
       />
     </React.Fragment>
   );
