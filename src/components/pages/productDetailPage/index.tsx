@@ -8,6 +8,7 @@ import ProductCard from '~/components/common/productCard';
 import StarRating from '~/components/common/starRating';
 import { API_URL } from '~/constants/api.constant';
 import { calculateSalePrice, formatCurrency2 } from '~/helpers/base.helper';
+import { DateJS } from '~/helpers/date.helper';
 import useCartHook from '~/hooks/useCartHook';
 import Layout from '~/layouts/Layout';
 import API from '~/services/axiosClient';
@@ -16,6 +17,16 @@ import useCart from '~/stores/cart';
 import GallerySlider from './components/GallerySlider';
 import Ratings from './components/RatingsSummary';
 import styles from './style.module.css';
+
+// const fakeComments = [
+//   { account: 'Tâm', message: 'Mua được đấy, xài tốt', rate: 4.5, at: '' },
+//   {
+//     account: 'Đạt',
+//     message: 'Dùng rất mượt, nhưng giá hơi cao so với chỗ khác',
+//     rate: 4,
+//     at: '',
+//   },
+// ];
 
 const ProductDetailPage = (props: any) => {
   const { product, comments: productComments = [] } = props;
@@ -343,11 +354,28 @@ const ProductDetailPage = (props: any) => {
 
         <div className="bg-gray_F1 p-2 rounded-xl">
           <StarRating total_rate={total_rate} />
-          <div className="mt-3">
+          <div className="mt-2">
             {productComments.length <= 0 ? (
               <p className="text-center">Sản phẩm này chưa có đánh giá</p>
             ) : (
-              <></>
+              <>
+                {productComments.map((e, index) => {
+                  return (
+                    <div key={index} className="first:mt-0 mt-3">
+                      <p>
+                        <span className="font-medium">{e?.account}</span>
+                        <span className="font-light italic text-sm ml-4">
+                          {DateJS.getFormatDate(e?.at, 'DD-MM-YYYY HH:mm')}
+                        </span>
+                      </p>
+                      <div className="bg-white px-3 py-2 rounded-lg">
+                        <StarRating total_rate={e?.rate} />
+                        {e?.message}
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
             )}
           </div>
         </div>

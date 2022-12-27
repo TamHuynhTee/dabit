@@ -8,7 +8,7 @@ type Props = {
 const ProfilePageFrame = (props: Props) => {
   return (
     <div className="my-[30px] h-full">
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-8">
         <div className="col-span-1">
           <Sidebar />
         </div>

@@ -1,7 +1,6 @@
 import { IconInfoCircle, IconReceipt2, IconShoppingCart } from '@tabler/icons';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -24,6 +23,7 @@ import Layout from '~/layouts/Layout';
 import API, { getAuthHeader } from '~/services/axiosClient';
 import { ReturnResponse } from '~/services/response.interface';
 import OrderStatusProgress from './components/orderStatusProgress';
+import StarRatings from 'react-star-ratings';
 
 const getCurrentStatus = (timeline: any[]) => {
   if (timeline.some((e) => e.statusTimeline === ORDER_STATUS.CANCELLED))
@@ -40,6 +40,8 @@ const getCurrentStatus = (timeline: any[]) => {
 const OrderTrackingPage = (props: any) => {
   const { orderInfo } = props;
 
+  const [productInfo, setProductInfo] = React.useState(null);
+
   const products = orderInfo?.products || [];
   const { query } = useRouter();
 
@@ -47,7 +49,7 @@ const OrderTrackingPage = (props: any) => {
   const discount = orderInfo?.discount || 0;
   const totalPayment = orderInfo?.total || 0;
 
-  const finalPayment = totalPayment + shipFee - discount * totalPayment;
+  const finalPayment = totalPayment + shipFee - discount;
 
   const account = orderInfo?.account;
   const address = orderInfo?.address;
@@ -58,6 +60,13 @@ const OrderTrackingPage = (props: any) => {
   const showCancelButton = [ORDER_STATUS.ORDERED, ORDER_STATUS.CONFIRMED].some(
     (e) => e == currentStatus
   );
+
+  const showReviewButton = currentStatus == ORDER_STATUS.DELIVERED;
+
+  const openReviewForm = (product: any) => {
+    setProductInfo(product);
+    openModalOrDrawer(MODAL_KEYS.MODAL_REVIEW_PRODUCT);
+  };
 
   const exportAsImage = async () => {
     const report = document.getElementById('printReport');
@@ -134,11 +143,12 @@ const OrderTrackingPage = (props: any) => {
                     <Image src={thumbnail} alt="" layout="fill" />
                   </div>
                   <div className="col-span-4">
-                    <Link href="#!">
-                      <a className="hover:underline max_line-2">
-                        {nameProduct}
-                      </a>
-                    </Link>
+                    <a
+                      href={`/san-pham/${product?.product?._id}`}
+                      className="hover:underline max_line-2"
+                    >
+                      {nameProduct}
+                    </a>
                     <div className="mt-1">
                       <span className="font-semibold">Màu: </span>
                       {colorProduct}
@@ -151,8 +161,16 @@ const OrderTrackingPage = (props: any) => {
                       </div>
                     )}
                   </div>
-                  <div className="col-span-3 flex justify-center">
+                  <div className="col-span-3 h-full flex flex-col items-center">
                     <span>{formatCurrency2(priceProduct)}</span>
+                    {showReviewButton && (
+                      <button
+                        onClick={() => openReviewForm(product)}
+                        className="mt-auto px-3 py-2 rounded-md bg-blue_00 text-white"
+                      >
+                        Đánh giá
+                      </button>
+                    )}
                   </div>
                   <div className="col-span-1 flex justify-center">
                     X {product?.quantity}
@@ -184,9 +202,7 @@ const OrderTrackingPage = (props: any) => {
             </p>
             <p className="flex">
               <span className="mr-[60px] font-semibold">Giảm giá:</span>{' '}
-              <span className="ml-auto">
-                - {formatCurrency2(discount * totalPayment)}
-              </span>
+              <span className="ml-auto">- {formatCurrency2(discount)}</span>
             </p>
             <p className="flex">
               <span className="mr-[60px] font-semibold">Phí vận chuyển:</span>{' '}
@@ -271,12 +287,111 @@ const OrderTrackingPage = (props: any) => {
 
         <ModalContainer
           modalKey={MODAL_KEYS.MODAL_CANCEL_ORDER}
-          animation="fade"
+          animation="scale"
         >
           <ModalCancelOrder _id={query.order} />
         </ModalContainer>
+        <ModalContainer
+          modalKey={MODAL_KEYS.MODAL_REVIEW_PRODUCT}
+          animation="fade"
+        >
+          <ModalReviewProduct product={productInfo} />
+        </ModalContainer>
       </div>
     </Layout>
+  );
+};
+
+const ModalReviewProduct = (props) => {
+  const { product } = props;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm();
+
+  const { name: rateName } = register('rate', {
+    required: {
+      value: true,
+      message: 'Vui lòng chọn sao đánh giá',
+    },
+  });
+  const [currRate, setCurrRate] = React.useState(0);
+
+  const handleReview = async (data) => {
+    try {
+      const result = await API.post<any>({
+        url: API_URL.PRODUCT_RATE,
+        headers: { ...getAuthHeader() },
+        body: {
+          _id: product?.product?._id,
+          rate: data.rate,
+          message: data.message,
+        },
+      });
+      if (responseHasError(result.error))
+        throw Error(result?.message || result?.msg);
+
+      toast.success('Đã gửi đánh giá');
+      window.location.reload();
+    } catch (error) {
+      toast.error(error?.message || error?.data?.message);
+    }
+  };
+
+  return (
+    <div className="mt-3 max-w-[400px]">
+      <h3 className="mb-3 text-center font-semibold uppercase px-[10px]">
+        Đánh giá sản phẩm {product?.product?.name}
+      </h3>
+      <div className="mt-[20px]">
+        <form
+          onSubmit={handleSubmit(handleReview)}
+          className="flex flex-col gap-3 px-[10px]"
+        >
+          <div>
+            <StarRatings
+              rating={currRate}
+              starRatedColor="yellow"
+              changeRating={(newRating) => {
+                setCurrRate(newRating);
+                setValue('rate', newRating);
+              }}
+              numberOfStars={5}
+              name={rateName}
+            />
+            {errors?.rate && <ErrorText text={errors?.rate.message} />}
+          </div>
+          <div className="mt-4">
+            <Flex
+              className="py-[5px] px-[5px] gap-3 border border-[#c3c3c3]"
+              alignItem="center"
+            >
+              <textarea
+                {...register('message')}
+                className="border-none outline-none bg-transparent flex-1"
+                placeholder="Nhập đánh giá của bạn"
+                rows={5}
+              ></textarea>
+            </Flex>
+          </div>
+
+          <button
+            type="submit"
+            className="py-[5px] h-[40px] bg-blue_00 text-[#fff] rounded"
+          >
+            Gửi đánh giá
+          </button>
+          <button
+            type="button"
+            className="py-[5px] h-[40px] bg-gray_68 text-[#fff] rounded"
+          >
+            Hủy
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

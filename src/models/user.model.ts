@@ -7,4 +7,10 @@ export interface USER_MODEL extends MONGOOSE_MODEL {
   email: string;
   name: string;
   favorites: Record<string, string>;
+  chats: string[];
+  rate_waits: string[];
+  bills: string[];
+  warning: string[];
+  cart: string[];
+  notifications: string[];
 }

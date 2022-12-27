@@ -1,4 +1,6 @@
 import {
+  IconBell,
+  IconDialpad,
   IconDots,
   IconHome,
   IconLogout,
@@ -13,7 +15,7 @@ import { COOKIE_KEYS } from '~/constants/cookie.constants';
 import { getCookie } from '~/helpers/cookie.helper';
 import useAuth from '~/stores/auth';
 
-type Icons = 'home' | 'history' | 'profile';
+type Icons = 'home' | 'history' | 'profile' | 'password' | 'notification';
 
 type ISidebarLink = {
   text: string;
@@ -29,6 +31,10 @@ const getSidebarIconFromName = (iconName: Icons, iconProps: any) => {
       return <IconReport {...iconProps} />;
     case 'profile':
       return <IconUserCircle {...iconProps} />;
+    case 'password':
+      return <IconDialpad {...iconProps} />;
+    case 'notification':
+      return <IconBell {...iconProps} />;
     default:
       return <IconDots {...iconProps} />;
   }
@@ -45,6 +51,16 @@ const links: ISidebarLink[] = [
     text: 'Tài khoản của bạn',
     iconName: 'profile',
     slug: '/thong-tin',
+  },
+  {
+    text: 'Đổi mật khẩu',
+    iconName: 'password',
+    slug: '/doi-mat-khau',
+  },
+  {
+    text: 'Thông báo của tôi',
+    iconName: 'notification',
+    slug: '/thong-bao-cua-toi',
   },
 ];
 

@@ -98,6 +98,8 @@ const CartSection = (props) => {
     0
   );
 
+  const totalQuantity = cart.reduce((prev, curr) => prev + curr?.quantity, 0);
+
   const handleCheckout = () => {
     if (cart?.length === 0) {
       toast.error('Giỏ hàng trống');
@@ -109,8 +111,6 @@ const CartSection = (props) => {
   const handleContinue = () => {
     router.push('/');
   };
-
-  const totalQuantity = cart.reduce((prev, curr) => prev + curr?.quantity, 0);
 
   return (
     <div className="my-[30px]">
@@ -175,7 +175,7 @@ const CartItem = (props) => {
   } = props;
 
   const newPrice = calculateSalePrice(price, salePercent);
-  const totalPay = React.useMemo(() => quantity * newPrice, [quantity]);
+  const totalPay = quantity * newPrice;
 
   return (
     <div className="rounded-md w-full p-2 grid grid-cols-[100px_minmax(300px,_1fr)_600px] items-center">

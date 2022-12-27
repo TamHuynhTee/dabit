@@ -10,7 +10,7 @@ export enum ORDER_STATUS {
 export const ORDER_STATUS_TEXT = {
   [ORDER_STATUS.ORDERED]: 'Đã đặt hàng',
   [ORDER_STATUS.CONFIRMED]: 'Đã xác nhận',
-  [ORDER_STATUS.ON_DELIVERY]: 'Đang giao hàng',
+  [ORDER_STATUS.ON_DELIVERY]: 'Đang vận chuyển',
   [ORDER_STATUS.DELIVERED]: 'Đã nhận hàng',
   [ORDER_STATUS.CANCELLED]: 'Đã hủy',
 };

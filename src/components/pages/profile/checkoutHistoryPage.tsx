@@ -23,7 +23,7 @@ const filterStatus = [
 const getTagColor = (status) => {
   if (status == ORDER_STATUS.ORDERED) return 'bg-[#9EA1D4] text-white';
   if (status == ORDER_STATUS.CONFIRMED) return 'bg-[#A8D1D1] text-white';
-  if (status == ORDER_STATUS.ON_DELIVERY) return 'bg-[#F1F7B5] text-white';
+  if (status == ORDER_STATUS.ON_DELIVERY) return 'bg-[#F1F7B5] text-black';
   if (status == ORDER_STATUS.DELIVERED) return 'bg-[#86C8BC] text-white';
   if (status == ORDER_STATUS.CANCELLED) return 'bg-[#FD8A8A] text-white';
 };
@@ -33,6 +33,7 @@ const ProfileInfoPage = (props: any) => {
   const { All } = bills;
 
   const [statusBills, setStatusBills] = React.useState(All.reverse() || []);
+  console.log(`file: checkoutHistoryPage.tsx:36 => statusBills`, statusBills);
   const [currStatus, setCurrStatus] = React.useState<number | string>(
     filterStatus[0].value
   );
@@ -110,7 +111,9 @@ const ProfileInfoPage = (props: any) => {
                         className="grid grid-cols-9 items-center p-3 first:border-t-0 border-t border-t-gray_B9"
                       >
                         <div className="col-span-3 flex justify-center">
-                          <span className="select-none">...</span>
+                          <span className="select-none">
+                            {bill?.products?.length} sản phẩm
+                          </span>
                         </div>
                         <div className="col-span-2 flex justify-center">
                           <span
@@ -134,7 +137,7 @@ const ProfileInfoPage = (props: any) => {
                           {/* <Link> */}
                           <a
                             href={`/kiem-tra-don-hang/${bill?._id}`}
-                            className="select-none bg-error rounded-full text-white py-2 px-4"
+                            className="select-none bg-blue_00 rounded-full text-white py-2 px-4"
                           >
                             Xem chi tiết
                           </a>
