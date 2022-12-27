@@ -174,7 +174,7 @@ const CheckoutPage = (props) => {
         body: { ...payload },
       });
 
-      if (result.status && result.status !== 200) throw new Error();
+      if (result.status && result.status !== 200) throw new Error(result?.msg);
       if (result?.status === 200 && data.payment === 'cod')
         window.location.href = '/thanh-toan/thanh-cong';
       if (result?.data && data.payment === 'vnpay')
@@ -182,7 +182,7 @@ const CheckoutPage = (props) => {
 
       clearCart();
     } catch (error) {
-      toast.error('Có lỗi thanh toán');
+      toast.error('Có lỗi thanh toán', error);
       console.log('err,', error);
     }
   };
@@ -361,14 +361,14 @@ const CheckoutPage = (props) => {
               })}
 
               <div className="flex items-center justify-between py-[15px] border-b-[2px] border-b-gray_D9">
-                <span className="text-[18px]">Tổng tạm tính</span>
+                <span className="text-[18px] font-medium">Tổng tạm tính</span>
                 <span className="text-[18px]">
                   {formatCurrency2(initialBill)}
                 </span>
               </div>
 
               <div className="flex items-center justify-between py-[15px] border-b-[2px] border-b-gray_D9">
-                <span className="text-[18px]">Giảm giá</span>
+                <span className="text-[18px] font-medium">Giảm giá</span>
                 <span className="text-[18px]">
                   {formatCurrency2(checkout?.discount || 0)}
                 </span>
@@ -376,7 +376,7 @@ const CheckoutPage = (props) => {
 
               <div className="flex items-center justify-between py-[15px] border-b-[2px] border-b-gray_D9">
                 <div className="w-full">
-                  <span className="inline-block text-[18px] mb-[10px] ">
+                  <span className="inline-block text-[18px] mb-[10px] font-medium">
                     Phương thức giao hàng
                   </span>
                   <div className="input-gr">

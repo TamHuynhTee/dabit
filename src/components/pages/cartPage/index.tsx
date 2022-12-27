@@ -4,7 +4,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-hot-toast';
 import { LOCAL_STORAGE_KEY } from '~/constants/localStorage.constants';
-import { formatCurrency2, getFromLocalStorage } from '~/helpers/base.helper';
+import {
+  calculateSalePrice,
+  formatCurrency2,
+  getFromLocalStorage,
+} from '~/helpers/base.helper';
 import { productURL } from '~/helpers/url.helper';
 import useCartHook from '~/hooks/useCartHook';
 import Layout from '~/layouts/Layout';
@@ -89,7 +93,8 @@ const CartSection = (props) => {
   );
 
   const totalBill = cart.reduce(
-    (prev, curr) => prev + curr?.price * curr?.quantity,
+    (prev, curr) =>
+      prev + calculateSalePrice(curr?.price, curr?.sale) * curr?.quantity,
     0
   );
 
@@ -99,6 +104,10 @@ const CartSection = (props) => {
       return;
     }
     router.push('/thanh-toan');
+  };
+
+  const handleContinue = () => {
+    router.push('/');
   };
 
   const totalQuantity = cart.reduce((prev, curr) => prev + curr?.quantity, 0);
@@ -141,7 +150,7 @@ const CartSection = (props) => {
             Thanh toán
           </button>
           <button
-            onClick={handleCheckout}
+            onClick={handleContinue}
             className="block mt-4 py-2 bg-black text-white rounded-lg text-center uppercase font-semibold"
           >
             Tiếp tục mua hàng
@@ -160,11 +169,13 @@ const CartItem = (props) => {
     color,
     quantity,
     product,
+    sale: salePercent = 0,
     handleChangeQuantity,
     handleRemoveItem,
   } = props;
 
-  const totalPay = React.useMemo(() => quantity * price, [quantity]);
+  const newPrice = calculateSalePrice(price, salePercent);
+  const totalPay = React.useMemo(() => quantity * newPrice, [quantity]);
 
   return (
     <div className="rounded-md w-full p-2 grid grid-cols-[100px_minmax(300px,_1fr)_600px] items-center">
@@ -186,6 +197,11 @@ const CartItem = (props) => {
         <p className="text-sm italic text-dark_3">
           <span className="text-gray_B9">Màu:</span> {color}
         </p>
+        {salePercent > 0 && (
+          <span className="text-sm italic text-error bg-gray_F1 w-fit p-1 rounded-full">
+            <span className="text-error">Giảm giá:</span> {salePercent}%
+          </span>
+        )}
       </div>
       <div className="grid grid-cols-5">
         <div className="col-span-1 h-full mx-3 flex gap-x-2 justify-center items-center">
@@ -209,7 +225,7 @@ const CartItem = (props) => {
         </div>
         <div className="col-span-3 flex justify-evenly items-center">
           <span className="text-[16px] font-normal">
-            x {formatCurrency2(price)}
+            x {formatCurrency2(newPrice)}
           </span>
           <span className="text-[16px] font-semibold">
             = {formatCurrency2(totalPay)}

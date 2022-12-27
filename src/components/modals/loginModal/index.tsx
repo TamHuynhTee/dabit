@@ -40,7 +40,7 @@ const ModalLogin = () => {
       const result = await API.post<ReturnResponse<IResLogin>>({
         url: API_URL.LOGIN,
         body: {
-          username: data.phone,
+          username: data.username,
           password: data.password,
         },
       });
@@ -63,14 +63,14 @@ const ModalLogin = () => {
       await API.post<any>({
         url: API_URL.GET_OTP,
         body: {
-          phone: data.phone,
+          username: data.username,
         },
       });
 
       //   if (responseHasError(result.error)) throw new Error(result.message);
       //   toast.success(result?.msg);
 
-      window.location.href = `/nhap-otp?email_or_phone=${data.phone}`;
+      window.location.href = `/nhap-otp?email_or_phone=${data.username}`;
     } catch (error) {
       toast.error(error?.message || error?.data?.message);
     }
@@ -104,7 +104,7 @@ const ModalLogin = () => {
             >
               <IconDeviceMobile size={20} />
               <input
-                {...register('phone', {
+                {...register('username', {
                   required: 'Vui lòng nhập số điện thoại hoặc email',
                 })}
                 type="text"
@@ -112,7 +112,7 @@ const ModalLogin = () => {
                 placeholder="Nhập số điện thoại hoặc email"
               />
             </Flex>
-            {errors?.phone && <ErrorText text={errors?.phone.message} />}
+            {errors?.username && <ErrorText text={errors?.username.message} />}
           </div>
           {type == LoginType.PASSWORD && (
             <PasswordInput register={register} errors={errors} />
