@@ -13,4 +13,6 @@ export interface USER_MODEL extends MONGOOSE_MODEL {
   warning: string[];
   cart: string[];
   notifications: string[];
+  gender?: string;
+  birth?: string;
 }

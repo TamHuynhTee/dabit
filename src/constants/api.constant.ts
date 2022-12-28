@@ -23,6 +23,8 @@ export const API_URL = {
   TOP_PRODUCT: '/api/product/top',
   GET_OTP: '/api/auth/otp',
   CHECK_OTP: '/api/auth/checkOtp',
+  UPDATE_INFO: '/api/users/update',
+  UPDATE_CHANGE_PHONE: '/api/users/change-phone',
   DISTRICT: (proCode: string) => `/api/location/district/${proCode}`,
   WARD: (disCode: string) => `/api/location/ward/${disCode}`,
 };

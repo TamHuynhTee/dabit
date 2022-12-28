@@ -24,7 +24,7 @@ function Chat(props) {
       return API.post({ url, headers: { ...getAuthHeader() }, body: payload });
     },
     newChat(payload: any): Promise<ReturnResponse<any>> {
-      const url = '/chat/new'; //params : page, filter
+      const url = '/api/chat/new'; //params : page, filter
       return API.post({ url, headers: { ...getAuthHeader() }, body: payload });
     },
   };
@@ -76,7 +76,7 @@ function Chat(props) {
     const res: any = await chatApi.newChat({
       message: 'Bắt đầu cuộc trò chuyện mới !',
     });
-    // console.log('resNew', res);
+    console.log('resNew', res);
     if (res == 200) setID(res.data.data);
   };
 

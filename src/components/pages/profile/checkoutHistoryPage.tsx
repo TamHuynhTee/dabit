@@ -28,12 +28,11 @@ const getTagColor = (status) => {
   if (status == ORDER_STATUS.CANCELLED) return 'bg-[#FD8A8A] text-white';
 };
 
-const ProfileInfoPage = (props: any) => {
+const CheckoutHistoryPage = (props: any) => {
   const { bills } = props;
   const { All } = bills;
 
   const [statusBills, setStatusBills] = React.useState(All.reverse() || []);
-  console.log(`file: checkoutHistoryPage.tsx:36 => statusBills`, statusBills);
   const [currStatus, setCurrStatus] = React.useState<number | string>(
     filterStatus[0].value
   );
@@ -202,4 +201,4 @@ const Filter = (props) => {
 
 const FilterOrder = React.memo(Filter);
 
-export default ProfileInfoPage;
+export default CheckoutHistoryPage;

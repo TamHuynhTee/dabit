@@ -87,9 +87,15 @@ const ProductsPage = (props: any) => {
 
       {products?.data?.length <= 0 && <p>Không có sản phẩm của danh mục này</p>}
       <div className="grid grid-cols-5 gap-x-3 gap-y-3">
-        {(products?.data || []).map((product, index) => {
-          return <ProductCard key={index} {...product} />;
-        })}
+        {total > 0 ? (
+          (products?.data || []).map((product, index) => {
+            return <ProductCard key={index} {...product} />;
+          })
+        ) : (
+          <div className="col-span-5">
+            <p className="text-center">Không có sản phẩm của danh mục này</p>
+          </div>
+        )}
       </div>
     </Layout>
   );

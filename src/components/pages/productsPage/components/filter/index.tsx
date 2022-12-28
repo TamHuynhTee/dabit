@@ -94,7 +94,7 @@ const SpecsFilter = (props) => {
     const _query = {};
     const _selected = Object.keys(selected);
     _selected.forEach((selectKey) => {
-      if (selected[selectKey].length > 0)
+      if (selected[selectKey]?.length > 0)
         _query[selectKey] = selected[selectKey].join(';');
       else _query[selectKey] = undefined;
     });
@@ -154,10 +154,10 @@ const SpecValues = (props) => {
   const _name = spec?.name;
 
   const selectSpec = (e) => {
-    if (selected[_name].includes(e.value))
+    if (selected?.[_name]?.includes(e.value))
       setSelected({
         ...selected,
-        [_name]: selected[_name].filter((specItem) => specItem != e.value),
+        [_name]: selected?.[_name]?.filter((specItem) => specItem != e.value),
       });
     else {
       setSelected({
@@ -170,7 +170,7 @@ const SpecValues = (props) => {
   return (
     <div className="flex flex-wrap gap-3">
       {spec?.values?.map((e, i) => {
-        const active = selected[_name]?.indexOf(e.value) > -1;
+        const active = selected?.[_name]?.indexOf(e.value) > -1;
         return (
           <div
             key={i}
@@ -201,8 +201,8 @@ const ColorsFilter = (props) => {
   );
 
   const selectColor = (e) => {
-    if (selected.includes(e))
-      setSelected(selected.filter((color) => color != e));
+    if (selected?.includes(e))
+      setSelected(selected?.filter((color) => color != e));
     else setSelected([...selected, e]);
   };
 
@@ -210,7 +210,7 @@ const ColorsFilter = (props) => {
     appendToURL({
       router,
       newQuery: {
-        colors: selected.length > 0 ? selected.join(';') : undefined,
+        colors: selected?.length > 0 ? selected?.join(';') : undefined,
       },
     });
   };

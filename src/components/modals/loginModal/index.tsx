@@ -1,4 +1,5 @@
 import { IconDeviceMobile, IconKey, IconNumber1 } from '@tabler/icons';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -34,6 +35,7 @@ const ModalLogin = () => {
   } = useForm();
 
   const [type, setType] = React.useState(LoginType.PASSWORD);
+  const { query } = useRouter();
 
   const handleLogin = async (data: any) => {
     try {
@@ -51,7 +53,8 @@ const ModalLogin = () => {
       setCookie(COOKIE_KEYS.ACCESS_TOKEN, result.data.tokens.access.token);
       setCookie(COOKIE_KEYS.REFRESH_TOKEN, result.data.tokens.refresh.token);
 
-      window.location.href = '/';
+      const backURL = (query?.backURL as string) || '/';
+      window.location.href = backURL;
       // closeModalOrDrawer(MODAL_KEYS.MODAL_LOGIN);
     } catch (error) {
       toast.error(error?.message || error?.data?.message);

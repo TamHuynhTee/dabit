@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!token)
       return {
         redirect: {
-          destination: '/unauthorized',
+          destination: '/unauthorized?backURL=/tai-khoan/doi-mat-khau',
           permanent: false,
         },
       };

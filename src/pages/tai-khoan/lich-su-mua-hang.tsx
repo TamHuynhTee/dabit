@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!token)
       return {
         redirect: {
-          destination: '/unauthorized',
+          destination: '/unauthorized?backURL=/tai-khoan/lich-su-mua-hang',
           permanent: false,
         },
       };

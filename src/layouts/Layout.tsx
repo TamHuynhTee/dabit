@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React from 'react';
 import {
   IconHistory,
@@ -80,15 +79,13 @@ const Layout = (props: Props) => {
               <div className="grid grid-cols-12 gap-1 h-[40px] [&>*]:h-full">
                 {/* Logo */}
                 <Flex alignItem="center" className="col-span-1 justify-start">
-                  <Link href={'/'}>
-                    <a>
-                      <ImageRender
-                        src="/nobida_logo.png"
-                        alt="logo"
-                        className="h-full w-[40px]"
-                      />
-                    </a>
-                  </Link>
+                  <a href={'/'}>
+                    <ImageRender
+                      src="/nobida_logo.png"
+                      alt="logo"
+                      className="h-full w-[40px]"
+                    />
+                  </a>
                 </Flex>
                 {/* Search */}
                 <div className="col-span-7">
@@ -106,11 +103,9 @@ const Layout = (props: Props) => {
                     </div>
                     <div className="justify-self-center">
                       {isLoggedIn ? (
-                        <Link href={`/tai-khoan/trang-chu`}>
-                          <a className="">
-                            Xin chào, {profile?.name?.split(' ')[0]}
-                          </a>
-                        </Link>
+                        <a className="" href={`/tai-khoan/trang-chu`}>
+                          Xin chào, {profile?.name?.split(' ')[0]}
+                        </a>
                       ) : (
                         <button
                           onClick={() =>
@@ -131,15 +126,13 @@ const Layout = (props: Props) => {
                     justifyContent="center"
                     className="col-span-1"
                   >
-                    <Link href={'/kiem-tra-don-hang'}>
-                      <a title="Kiểm tra đơn hàng">
-                        <IconTruckDelivery
-                          size={24}
-                          strokeWidth={2}
-                          className={`${styles.checkOrder_icon}`}
-                        />
-                      </a>
-                    </Link>
+                    <a title="Kiểm tra đơn hàng" href={'/kiem-tra-don-hang'}>
+                      <IconTruckDelivery
+                        size={24}
+                        strokeWidth={2}
+                        className={`${styles.checkOrder_icon}`}
+                      />
+                    </a>
                   </Flex>
                   {/* History */}
                   <Flex
@@ -147,15 +140,16 @@ const Layout = (props: Props) => {
                     justifyContent="center"
                     className="col-span-1"
                   >
-                    <Link href={`/tai-khoan/lich-su-mua-hang`}>
-                      <a title="Lịch sử mua hàng">
-                        <IconHistory
-                          size={24}
-                          strokeWidth={2}
-                          className={`${styles.history_icon}`}
-                        />
-                      </a>
-                    </Link>
+                    <a
+                      href={`/tai-khoan/lich-su-mua-hang`}
+                      title="Lịch sử mua hàng"
+                    >
+                      <IconHistory
+                        size={24}
+                        strokeWidth={2}
+                        className={`${styles.history_icon}`}
+                      />
+                    </a>
                   </Flex>
                   {/* Cart */}
                   <Flex

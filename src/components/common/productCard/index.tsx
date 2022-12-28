@@ -53,18 +53,18 @@ const ProductCard = (props: any) => {
               className="w-full h-full object-cover"
               alt=""
             />
-            <span className="absolute right-[-3px] top-[15px] w-[80px]">
-              <img
-                src={'/assets/icons/ic_discount.png'}
-                className="w-full h-full"
-                alt=""
-              />
-              {salePercent && (
+            {salePercent > 0 && (
+              <span className="absolute right-[-3px] top-[15px] w-[80px]">
+                <img
+                  src={'/assets/icons/ic_discount.png'}
+                  className="w-full h-full"
+                  alt=""
+                />
                 <span className="absolute text-xs top-1/2 left-0 -translate-y-1/2 text-white w-full text-center">
                   Giảm {salePercent}%
                 </span>
-              )}
-            </span>
+              </span>
+            )}
           </span>
           <h3 className={styles.product_name}>{name || '<Chưa cập nhật>'}</h3>
           <span className={styles.box_price}>

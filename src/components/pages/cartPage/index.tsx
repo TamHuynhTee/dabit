@@ -105,11 +105,13 @@ const CartSection = (props) => {
       toast.error('Giỏ hàng trống');
       return;
     }
-    router.push('/thanh-toan');
+    window.location.href = '/thanh-toan';
+    // router.push('/thanh-toan');
   };
 
   const handleContinue = () => {
-    router.push('/');
+    // router.push('/');
+    window.location.href = '/';
   };
 
   return (
