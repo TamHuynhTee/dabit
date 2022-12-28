@@ -414,7 +414,7 @@ const ModalCancelOrder = (props) => {
           desc: data.desc,
         },
       });
-      if (responseHasError(result.error)) throw Error('Có lỗi');
+      if (responseHasError(result.error)) throw Error(result.message);
       window.location.reload();
     } catch (error) {
       toast.error(error?.message || error?.data?.message);
