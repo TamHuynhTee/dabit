@@ -225,10 +225,17 @@ const CartItem = (props) => {
             +
           </button>
         </div>
-        <div className="col-span-3 flex justify-evenly items-center">
-          <span className="text-[16px] font-normal">
-            x {formatCurrency2(newPrice)}
-          </span>
+        <div className="col-span-3 flex justify-evenly items-baseline">
+          <div className="flex flex-col gap-y-2">
+            <span className="text-[16px] font-normal">
+              x {formatCurrency2(newPrice)}
+            </span>
+            {salePercent > 0 && (
+              <span className="text-[16px] font-light line-through">
+                {formatCurrency2(price)}
+              </span>
+            )}
+          </div>
           <span className="text-[16px] font-semibold">
             = {formatCurrency2(totalPay)}
           </span>

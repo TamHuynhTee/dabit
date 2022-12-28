@@ -71,7 +71,7 @@ const ProductCard = (props: any) => {
             <span className={styles.product__price}>
               {formatCurrency2(newPrice)}
             </span>
-            {newPrice > 0 && (
+            {salePercent > 0 && (
               <span className={styles.product__price__old}>
                 {formatCurrency2(price)}
               </span>

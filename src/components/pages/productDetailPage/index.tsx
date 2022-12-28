@@ -1,4 +1,5 @@
 import { IconMinus, IconPlus, IconShoppingCartPlus } from '@tabler/icons';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-hot-toast';
 import Slider from 'react-slick';
@@ -47,6 +48,7 @@ const ProductDetailPage = (props: any) => {
   const { addToCart } = useCartHook();
   const [{ products }] = useCart();
   const [hints, setHints] = React.useState([]);
+  const { push } = useRouter();
 
   React.useEffect(() => {
     (async () => {
@@ -94,7 +96,11 @@ const ProductDetailPage = (props: any) => {
         color: currentColor?.color,
       });
       toast.success('Đã thêm vào giỏ hàng');
-      window.location.href = '/gio-hang';
+      //   window.location.href = '/gio-hang';
+      setTimeout(() => {
+        window.location.href = '/gio-hang';
+      }, 500);
+      //   push(`/gio-hang`);
     } else {
       toast.error('Không thể mua hàng');
     }
@@ -157,7 +163,7 @@ const ProductDetailPage = (props: any) => {
               <p className="text-[22px] text-yellow_E3 font-bold">
                 {formatCurrency2(newPrice)}
               </p>
-              {newPrice > 0 && (
+              {salePercent > 0 && (
                 <p className="text-[16px] text-dark_3 font-semibold">
                   <span className="line-through">{formatCurrency2(price)}</span>
                   <span className="ml-4 text-error">Giảm {salePercent}%</span>

@@ -68,19 +68,19 @@ const OrderTrackingPage = (props: any) => {
     openModalOrDrawer(MODAL_KEYS.MODAL_REVIEW_PRODUCT);
   };
 
-  const exportAsImage = async () => {
-    const report = document.getElementById('printReport');
-    const canvas = await html2canvas(report, {
-      allowTaint: true,
-      useCORS: true,
-    });
-    const a = document.createElement('a');
-    a.href = canvas
-      .toDataURL('image/jpeg')
-      .replace('image/jpeg', 'image/octet-stream');
-    a.download = `don_hang_${query.order || ''}.jpg`;
-    a.click();
-  };
+  //   const exportAsImage = async () => {
+  //     const report = document.getElementById('printReport');
+  //     const canvas = await html2canvas(report, {
+  //       allowTaint: true,
+  //       useCORS: true,
+  //     });
+  //     const a = document.createElement('a');
+  //     a.href = canvas
+  //       .toDataURL('image/jpeg')
+  //       .replace('image/jpeg', 'image/octet-stream');
+  //     a.download = `don_hang_${query.order || ''}.jpg`;
+  //     a.click();
+  //   };
 
   return (
     <Layout categories={props?.categories || []}>
@@ -269,12 +269,12 @@ const OrderTrackingPage = (props: any) => {
         </div>
 
         <div className="col-span-12 flex items-center justify-end py-3 gap-x-4">
-          <button
+          {/* <button
             className="border border-dark_3 bg-baseColor p-2 rounded-lg"
             onClick={exportAsImage}
           >
             Xuất hóa đơn
-          </button>
+          </button> */}
           {showCancelButton && (
             <button
               className="border border-error bg-error p-2 rounded-lg text-white"
