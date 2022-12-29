@@ -6,7 +6,7 @@ const StarRating = (props) => {
         return (
           <svg
             className={`w-5 h-5 ${
-              index + 1 < total_rate ? 'text-yellow_E3' : 'text-gray-300'
+              index + 1 <= total_rate ? 'text-yellow_E3' : 'text-gray-300'
             }`}
             fill="currentColor"
             viewBox="0 0 20 20"
