@@ -105,15 +105,28 @@ const OrderStatusProgress = ({
     const _timeline = [];
     const cloneTimeline = timeline.reverse();
     if (status === ORDER_STATUS.CANCELLED) {
-      cloneTimeline.map((_status) => {
-        _timeline.push({
-          status: _status.statusTimeline,
-          iconName: _status.statusTimeline,
+      //   cloneTimeline.map((_status) => {
+      _timeline.push(
+        {
+          status: ORDER_STATUS.ORDERED,
+          iconName: ORDER_STATUS.ORDERED,
           active: true,
-          time: _status.time,
-          milestone: ORDER_STATUS_TEXT[_status.statusTimeline],
-        });
-      });
+          time: cloneTimeline.find(
+            (_status) => _status.statusTimeline == ORDER_STATUS.ORDERED
+          )?.time,
+          milestone: ORDER_STATUS_TEXT[ORDER_STATUS.ORDERED],
+        },
+        {
+          status: ORDER_STATUS.CANCELLED,
+          iconName: ORDER_STATUS.CANCELLED,
+          active: true,
+          time: cloneTimeline.find(
+            (_status) => _status.statusTimeline == ORDER_STATUS.CANCELLED
+          )?.time,
+          milestone: ORDER_STATUS_TEXT[ORDER_STATUS.CANCELLED],
+        }
+      );
+      //   });
     } else {
       defaultTimeline.map((_status, i) => {
         _timeline.push(
